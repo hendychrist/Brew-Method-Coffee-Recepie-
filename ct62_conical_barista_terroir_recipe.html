@@ -63,12 +63,18 @@
   .header-badge {
     position: absolute;
     top: 0;
-    right: 0;
-    width: 52px;
-    height: 52px;
+    right: -20px;
+    width: 140px;
+    height: 140px;
     object-fit: contain;
-    border-radius: var(--radius-sm);
-    box-shadow: var(--shadow-sm);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    z-index: 0;
+  }
+
+  .header-content {
+    position: relative;
+    z-index: 1;
   }
 
   .brand {
@@ -465,7 +471,7 @@
   }
 
   /* ── Hide badge on small screens ── */
-  @media (max-width: 480px) {
+  @media (max-width: 600px) {
     .header-badge { display: none; }
   }
 </style>
@@ -475,9 +481,11 @@
   <!-- Header -->
   <div class="header">
     <img src="v60-Photoroom.png" alt="V60 Coffee Dripper" class="header-badge">
-    <div class="brand">Terroir.idn · Conical Barista</div>
-    <div class="title">CT62 <span>Recipe</span></div>
-    <div class="subtitle">V60 · Dual Steep Method · Bahrell</div>
+    <div class="header-content">
+      <div class="brand">Terroir.idn · Conical Barista</div>
+      <div class="title">CT62 <span>Recipe</span></div>
+      <div class="subtitle">V60 · Dual Steep Method · Bahrell</div>
+    </div>
   </div>
 
   <!-- Calculator -->
