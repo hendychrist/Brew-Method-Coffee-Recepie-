@@ -47,34 +47,46 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  .wrap {
-    max-width: 420px;
+  /* ── Page Shell (2-column layout) ── */
+  .page-shell {
+    max-width: 960px;
     margin: 0 auto;
-    padding: 2rem 1.25rem 3rem;
+    padding: 2.5rem 1.5rem 3rem;
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: 2rem;
+    align-items: start;
+    min-height: 100vh;
+  }
+
+  /* ── Left Column: Recipe Content ── */
+  .wrap {
+    width: 100%;
+  }
+
+  /* ── Right Column: Hero Art (Background Image) ── */
+  .hero-art {
+    position: relative;
+    min-height: 580px;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+  }
+
+  .hero-art::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("v60-Photoroom.png");
+    background-repeat: no-repeat;
+    background-position: right 20px top 30px;
+    background-size: 400px auto;
+    opacity: 0.20;
   }
 
   /* ── Header ── */
   .header {
-    position: relative;
     text-align: center;
     margin-bottom: 1.75rem;
-  }
-
-  .header-badge {
-    position: absolute;
-    top: 0;
-    right: -20px;
-    width: 140px;
-    height: 140px;
-    object-fit: contain;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-md);
-    z-index: 0;
-  }
-
-  .header-content {
-    position: relative;
-    z-index: 1;
   }
 
   .brand {
@@ -99,9 +111,7 @@
     margin-bottom: 0.35rem;
   }
 
-  .title span {
-    color: var(--accent-coral);
-  }
+  .title span { color: var(--accent-coral); }
 
   .subtitle {
     font-size: 13px;
@@ -122,9 +132,7 @@
   .card + .card { margin-top: 1rem; }
 
   /* ── Calculator card ── */
-  .calc-card {
-    margin-bottom: 1.25rem;
-  }
+  .calc-card { margin-bottom: 1.25rem; }
 
   .calc-label {
     font-size: 11.5px;
@@ -200,7 +208,7 @@
     border-radius: var(--radius-md);
     padding: 0.9rem 1rem;
     box-shadow: var(--shadow-sm);
-    transition: transform 0.15s ease;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
 
   .vol-card:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
@@ -464,156 +472,164 @@
     vertical-align: middle;
   }
 
-  /* ── Responsive padding ── */
+  /* ── Responsive ── */
+  @media (max-width: 991px) {
+    .page-shell {
+      grid-template-columns: 1fr;
+      max-width: 520px;
+    }
+
+    .hero-art { display: none; }
+  }
+
   @media (max-width: 380px) {
     .wrap { padding: 1.5rem 1rem 2.5rem; }
     .temp-grid { grid-template-columns: repeat(2, 1fr); }
   }
-
-  /* ── Hide badge on small screens ── */
-  @media (max-width: 600px) {
-    .header-badge { display: none; }
-  }
 </style>
 
-<div class="wrap">
+<div class="page-shell">
 
-  <!-- Header -->
-  <div class="header">
-    <img src="v60-Photoroom.png" alt="V60 Coffee Dripper" class="header-badge">
-    <div class="header-content">
+  <div class="wrap">
+
+    <!-- Header -->
+    <div class="header">
       <div class="brand">Terroir.idn · Conical Barista</div>
       <div class="title">CT62 <span>Recipe</span></div>
       <div class="subtitle">V60 · Dual Steep Method · Bahrell</div>
     </div>
-  </div>
 
-  <!-- Calculator -->
-  <div class="card calc-card">
-    <div class="calc-label">Dosis kopi — semua volume menyesuaikan otomatis</div>
-    <div class="calc-row">
-      <input type="range" id="gram-slider" min="10" max="25" value="15" step="1">
-      <div class="gram-val"><span id="gram-display">15</span>g</div>
+    <!-- Calculator -->
+    <div class="card calc-card">
+      <div class="calc-label">Dosis kopi — semua volume menyesuaikan otomatis</div>
+      <div class="calc-row">
+        <input type="range" id="gram-slider" min="10" max="25" value="15" step="1">
+        <div class="gram-val"><span id="gram-display">15</span>g</div>
+      </div>
+      <div class="gram-range-labels"><span>10g</span><span>25g</span></div>
     </div>
-    <div class="gram-range-labels"><span>10g</span><span>25g</span></div>
-  </div>
 
-  <!-- Volume Grid -->
-  <div class="section-title">Volume cumulative</div>
-  <div class="vol-grid">
-    <div class="vol-card">
-      <div class="vol-label">Bloom <span class="mult-tag">×3</span></div>
-      <div class="vol-num" id="v1">45</div>
-      <div class="vol-sub">ml kumulatif</div>
-    </div>
-    <div class="vol-card">
-      <div class="vol-label">Pour ke-2 <span class="mult-tag">×7</span></div>
-      <div class="vol-num" id="v2">105</div>
-      <div class="vol-sub">ml kumulatif</div>
-    </div>
-    <div class="vol-card">
-      <div class="vol-label">Pour ke-3 <span class="mult-tag">×11</span></div>
-      <div class="vol-num" id="v3">165</div>
-      <div class="vol-sub">ml kumulatif</div>
-    </div>
-    <div class="vol-card">
-      <div class="vol-label">Pour ke-4 <span class="mult-tag">×15</span></div>
-      <div class="vol-num" id="v4">225</div>
-      <div class="vol-sub">ml total</div>
-    </div>
-  </div>
-
-  <!-- Brewing Steps -->
-  <div class="section-title">Tahapan brewing</div>
-  <div class="steps">
-
-    <div class="step">
-      <div class="step-num bloom">1</div>
-      <div class="step-body">
-        <div class="step-head">Bloom — 0:00 → 0:55</div>
-        <div class="step-detail">Tuang <strong id="bloom-ml">45ml</strong> air suhu <strong>97°C</strong>. Aduk 10 kali merata. Tutup dripper.</div>
-        <span class="badge badge-teal">Rendem pertama — ekstrak flavour</span>
+    <!-- Volume Grid -->
+    <div class="section-title">Volume cumulative</div>
+    <div class="vol-grid">
+      <div class="vol-card">
+        <div class="vol-label">Bloom <span class="mult-tag">×3</span></div>
+        <div class="vol-num" id="v1">45</div>
+        <div class="vol-sub">ml kumulatif</div>
+      </div>
+      <div class="vol-card">
+        <div class="vol-label">Pour ke-2 <span class="mult-tag">×7</span></div>
+        <div class="vol-num" id="v2">105</div>
+        <div class="vol-sub">ml kumulatif</div>
+      </div>
+      <div class="vol-card">
+        <div class="vol-label">Pour ke-3 <span class="mult-tag">×11</span></div>
+        <div class="vol-num" id="v3">165</div>
+        <div class="vol-sub">ml kumulatif</div>
+      </div>
+      <div class="vol-card">
+        <div class="vol-label">Pour ke-4 <span class="mult-tag">×15</span></div>
+        <div class="vol-num" id="v4">225</div>
+        <div class="vol-sub">ml total</div>
       </div>
     </div>
 
-    <div class="step">
-      <div class="step-num pour">2</div>
-      <div class="step-body">
-        <div class="step-head">Pour ke-2 — 0:55 → 1:05</div>
-        <div class="step-detail">Buka tutup. Tuang air suhu <strong>92°C</strong> hingga total kumulatif <strong id="p2-ml">105ml</strong>. Aduk 5 kali.</div>
-        <div class="step-detail">Tutup kembali di menit <strong>1:10</strong>.</div>
+    <!-- Brewing Steps -->
+    <div class="section-title">Tahapan brewing</div>
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num bloom">1</div>
+        <div class="step-body">
+          <div class="step-head">Bloom — 0:00 → 0:55</div>
+          <div class="step-detail">Tuang <strong id="bloom-ml">45ml</strong> air suhu <strong>97°C</strong>. Aduk 10 kali merata. Tutup dripper.</div>
+          <span class="badge badge-teal">Rendem pertama — ekstrak flavour</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num pour">2</div>
+        <div class="step-body">
+          <div class="step-head">Pour ke-2 — 0:55 → 1:05</div>
+          <div class="step-detail">Buka tutup. Tuang air suhu <strong>92°C</strong> hingga total kumulatif <strong id="p2-ml">105ml</strong>. Aduk 5 kali.</div>
+          <div class="step-detail">Tutup kembali di menit <strong>1:10</strong>.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num rest">3</div>
+        <div class="step-body">
+          <div class="step-head">Pour ke-3 — 2:10</div>
+          <div class="step-detail">Tuang air suhu <strong>92°C</strong> hingga total kumulatif <strong id="p3-ml">165ml</strong>.</div>
+          <span class="badge badge-amber">Rendem kedua — balance &amp; tekstur</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num finish">4</div>
+        <div class="step-body">
+          <div class="step-head">Pour ke-4 — finish</div>
+          <div class="step-detail">Tuang air suhu <strong>70°C</strong> hingga total <strong id="p4-ml">225ml</strong>. Biarkan drawdown sempurna.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <hr class="divider">
+
+    <!-- Grind Adjustment -->
+    <div class="section-title">Penyesuaian gilingan</div>
+    <div class="grind-section">
+      <div class="grind-card">
+        <div class="grind-head">Gilingan halus</div>
+        <div class="grind-body">Bloom lebih cepat. Interval: <strong>20 – 25 – 25 – 25 detik</strong>. Jaga waktu lebih ketat.</div>
+      </div>
+      <div class="grind-card">
+        <div class="grind-head">Gilingan kasar — Hi-flux / Sibarist paper</div>
+        <div class="grind-body">Flow lebih cepat. Bloom diperlama: <strong>45 – 45 – 30 – 30 – 30 detik</strong>. Waktu bisa dilama, tidak masalah.</div>
       </div>
     </div>
 
-    <div class="step">
-      <div class="step-num rest">3</div>
-      <div class="step-body">
-        <div class="step-head">Pour ke-3 — 2:10</div>
-        <div class="step-detail">Buka tutup. Tuang air suhu <strong>92°C</strong> hingga total kumulatif <strong id="p3-ml">165ml</strong>.</div>
-        <span class="badge badge-amber">Rendem kedua — balance &amp; tekstur</span>
+    <hr class="divider">
+
+    <!-- Temperature Summary -->
+    <div class="section-title">Ringkasan suhu</div>
+    <div class="temp-grid">
+      <div class="temp-card">
+        <div class="temp-label">Bloom</div>
+        <div class="temp-num">97°C</div>
+        <div class="temp-sub">aduk 10×</div>
+      </div>
+      <div class="temp-card">
+        <div class="temp-label">Pour ke-2</div>
+        <div class="temp-num">92°C</div>
+        <div class="temp-sub">aduk 5×</div>
+      </div>
+      <div class="temp-card">
+        <div class="temp-label">Pour ke-3</div>
+        <div class="temp-num">92°C</div>
+        <div class="temp-sub">rendem 2</div>
+      </div>
+      <div class="temp-card">
+        <div class="temp-label">Finish</div>
+        <div class="temp-num">70°C</div>
+        <div class="temp-sub">drawdown</div>
       </div>
     </div>
 
-    <div class="step">
-      <div class="step-num finish">4</div>
-      <div class="step-body">
-        <div class="step-head">Pour ke-4 — finish</div>
-        <div class="step-detail">Tuang air suhu <strong>70°C</strong> hingga total <strong id="p4-ml">225ml</strong>. Biarkan drawdown sempurna.</div>
+    <!-- Footer -->
+    <div class="footer">
+      <div class="footer-line">
+        <div class="footer-text">Resep oleh</div>
       </div>
+      <div class="sig">Bahrell</div>
+      <div class="sig-sub">Terroir.idn · Conical Barista</div>
     </div>
 
   </div>
 
-  <hr class="divider">
-
-  <!-- Grind Adjustment -->
-  <div class="section-title">Penyesuaian gilingan</div>
-  <div class="grind-section">
-    <div class="grind-card">
-      <div class="grind-head">Gilingan halus</div>
-      <div class="grind-body">Bloom lebih cepat. Interval: <strong>20 – 25 – 25 – 25 detik</strong>. Jaga waktu lebih ketat.</div>
-    </div>
-    <div class="grind-card">
-      <div class="grind-head">Gilingan kasar — Hi-flux / Sibarist paper</div>
-      <div class="grind-body">Flow lebih cepat. Bloom diperlama: <strong>45 – 45 – 30 – 30 – 30 detik</strong>. Waktu bisa dilama, tidak masalah.</div>
-    </div>
-  </div>
-
-  <hr class="divider">
-
-  <!-- Temperature Summary -->
-  <div class="section-title">Ringkasan suhu</div>
-  <div class="temp-grid">
-    <div class="temp-card">
-      <div class="temp-label">Bloom</div>
-      <div class="temp-num">97°C</div>
-      <div class="temp-sub">aduk 10×</div>
-    </div>
-    <div class="temp-card">
-      <div class="temp-label">Pour ke-2</div>
-      <div class="temp-num">92°C</div>
-      <div class="temp-sub">aduk 5×</div>
-    </div>
-    <div class="temp-card">
-      <div class="temp-label">Pour ke-3</div>
-      <div class="temp-num">92°C</div>
-      <div class="temp-sub">rendem 2</div>
-    </div>
-    <div class="temp-card">
-      <div class="temp-label">Finish</div>
-      <div class="temp-num">70°C</div>
-      <div class="temp-sub">drawdown</div>
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <div class="footer">
-    <div class="footer-line">
-      <div class="footer-text">Resep oleh</div>
-    </div>
-    <div class="sig">Bahrell</div>
-    <div class="sig-sub">Terroir.idn · Conical Barista</div>
-  </div>
+  <!-- Right Column: Decorative Hero Image -->
+  <div class="hero-art"></div>
 
 </div>
 
