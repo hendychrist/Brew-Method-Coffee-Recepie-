@@ -17,6 +17,10 @@
   ],
   "routes": [
     {
+      "src": "/(.*\\.(png|jpg|jpeg|svg|gif|ico))$",
+      "dest": "/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/ct62_conical_barista_terroir_recipe.html"
     }
