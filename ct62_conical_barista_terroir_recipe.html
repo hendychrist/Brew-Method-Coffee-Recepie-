@@ -47,24 +47,44 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ── Page Shell (2-column layout) ── */
+  /* ── Page Shell (3-column layout) ── */
   .page-shell {
-    max-width: 960px;
+    max-width: 1100px;
     margin: 0 auto;
     padding: 2.5rem 1.5rem 3rem;
     display: grid;
-    grid-template-columns: 420px 1fr;
+    grid-template-columns: 1fr 420px 1fr;
     gap: 2rem;
     align-items: start;
     min-height: 100vh;
   }
 
-  /* ── Left Column: Recipe Content ── */
+  /* ── Left Column: Decorative Image (Fellow EKG) ── */
+  .hero-art-left {
+    position: relative;
+    min-height: 580px;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    padding-right: 2rem;
+  }
+
+  .hero-art-left::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("fellowEkg.png");
+    background-repeat: no-repeat;
+    background-position: right 20px top 30px;
+    background-size: 420px auto;
+    opacity: 0.65;
+  }
+
+  /* ── Center Column: Recipe Content ── */
   .wrap {
     width: 100%;
   }
 
-  /* ── Right Column: Hero Art (Background Image) ── */
+  /* ── Right Column: Hero Art (V60 Background) ── */
   .hero-art {
     position: relative;
     min-height: 580px;
@@ -474,6 +494,12 @@
   }
 
   /* ── Responsive ── */
+  @media (max-width: 1100px) {
+    .page-shell {
+      grid-template-columns: 1fr 420px 1fr;
+    }
+  }
+
   @media (max-width: 991px) {
     .page-shell {
       grid-template-columns: 1fr;
@@ -481,6 +507,7 @@
     }
 
     .hero-art { display: none; }
+    .hero-art-left { display: none; }
   }
 
   @media (max-width: 380px) {
@@ -491,6 +518,10 @@
 
 <div class="page-shell">
 
+  <!-- Left Column: Decorative Hero Image -->
+  <div class="hero-art-left"></div>
+
+  <!-- Center Column: Recipe Content -->
   <div class="wrap">
 
     <!-- Header -->
