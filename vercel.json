@@ -5,6 +5,14 @@
     {
       "src": "ct62_conical_barista_terroir_recipe.html",
       "use": "@vercel/static"
+    },
+    {
+      "src": "v60-Photoroom.png",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "fellowEkg.png",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
