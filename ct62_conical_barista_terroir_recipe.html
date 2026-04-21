@@ -1,0 +1,610 @@
+<style>
+  :root {
+    --bg-page: #F5F0EB;
+    --bg-card: #FDFAF7;
+    --bg-inset: #F0EBE3;
+    --bg-deep: #1C140A;
+    --border: #E0D8CC;
+    --border-soft: #EDE6DB;
+
+    --text-primary: #1A1008;
+    --text-secondary: #6B5D4F;
+    --text-tertiary: #9C8E7E;
+    --text-inverse: #FDFAF7;
+
+    --accent-teal: #0F6E56;
+    --accent-teal-bg: #E1F5EE;
+    --accent-teal-text: #0A5A45;
+
+    --accent-blue: #185FA5;
+    --accent-blue-bg: #E6F1FB;
+    --accent-blue-text: #144F8A;
+
+    --accent-amber: #854F0B;
+    --accent-amber-bg: #FAEEDA;
+    --accent-amber-text: #6E4009;
+
+    --accent-coral: #C25A3A;
+    --accent-coral-bg: #FDECEA;
+    --accent-coral-text: #A04B30;
+
+    --shadow-sm: 0 1px 3px rgba(26, 16, 8, 0.07);
+    --shadow-md: 0 2px 8px rgba(26, 16, 8, 0.08);
+    --shadow-lg: 0 4px 16px rgba(26, 16, 8, 0.10);
+
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg-page);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 3rem;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    margin-bottom: 1.75rem;
+  }
+
+  .brand {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--accent-coral);
+    text-transform: uppercase;
+    font-weight: 600;
+    background: var(--accent-coral-bg);
+    padding: 3px 10px;
+    border-radius: 99px;
+    margin-bottom: 0.75rem;
+  }
+
+  .title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 0.35rem;
+  }
+
+  .title span {
+    color: var(--accent-coral);
+  }
+
+  .subtitle {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Card base ── */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.5rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .card + .card { margin-top: 1rem; }
+
+  /* ── Calculator card ── */
+  .calc-card {
+    margin-bottom: 1.25rem;
+  }
+
+  .calc-label {
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+
+  .calc-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .gram-val {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    min-width: 52px;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  .gram-val span { color: var(--accent-coral); }
+
+  /* Slider styling */
+  input[type="range"] {
+    -webkit-appearance: none;
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 99px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    background: var(--accent-coral);
+    border-radius: 50%;
+    box-shadow: 0 1px 4px rgba(194, 90, 58, 0.4);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.12);
+    box-shadow: 0 2px 8px rgba(194, 90, 58, 0.5);
+  }
+
+  .gram-range-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--text-tertiary);
+    margin-top: 0.4rem;
+    padding: 0 2px;
+  }
+
+  /* ── Volume Grid ── */
+  .vol-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 1.25rem;
+  }
+
+  .vol-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 0.9rem 1rem;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.15s ease;
+  }
+
+  .vol-card:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+
+  .vol-label {
+    font-size: 10.5px;
+    color: var(--text-tertiary);
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .vol-num {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+  }
+
+  .vol-sub {
+    font-size: 10.5px;
+    color: var(--text-tertiary);
+    margin-top: 2px;
+  }
+
+  /* volume card accent colors */
+  .vol-card:nth-child(1) { border-left: 3px solid var(--accent-teal); }
+  .vol-card:nth-child(2) { border-left: 3px solid var(--accent-blue); }
+  .vol-card:nth-child(3) { border-left: 3px solid var(--accent-amber); }
+  .vol-card:nth-child(4) { border-left: 3px solid var(--accent-coral); }
+
+  /* ── Section titles ── */
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    letter-spacing: 0.10em;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 0.85rem;
+    margin-top: 1.5rem;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-soft);
+  }
+
+  /* ── Steps ── */
+  .steps { margin-bottom: 1.25rem; }
+
+  .step {
+    display: flex;
+    gap: 0.85rem;
+    margin-bottom: 0.85rem;
+    align-items: flex-start;
+    background: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.1rem;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .step:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+
+  .step-num {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+    letter-spacing: -0.02em;
+  }
+
+  .step-num.bloom   { background: var(--accent-teal-bg);   color: var(--accent-teal-text); }
+  .step-num.pour    { background: var(--accent-blue-bg);   color: var(--accent-blue-text); }
+  .step-num.rest    { background: var(--accent-amber-bg);  color: var(--accent-amber-text); }
+  .step-num.finish  { background: var(--accent-coral-bg);  color: var(--accent-coral-text); }
+
+  .step-body { flex: 1; }
+
+  .step-head {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+  }
+
+  .step-detail {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .step-detail strong { color: var(--text-primary); font-weight: 600; }
+
+  .step-detail + .step-detail { margin-top: 4px; }
+
+  .badge {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 99px;
+    margin-top: 6px;
+    letter-spacing: 0.01em;
+  }
+
+  .badge-teal   { background: var(--accent-teal-bg);   color: var(--accent-teal-text); }
+  .badge-blue   { background: var(--accent-blue-bg);   color: var(--accent-blue-text); }
+  .badge-amber  { background: var(--accent-amber-bg);  color: var(--accent-amber-text); }
+
+  /* ── Divider ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border-soft);
+    margin: 1.5rem 0;
+  }
+
+  /* ── Grind section ── */
+  .grind-section { margin-bottom: 1.25rem; }
+
+  .grind-card {
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.85rem 1rem;
+    margin-bottom: 8px;
+  }
+
+  .grind-card:last-child { margin-bottom: 0; }
+
+  .grind-head {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+
+  .grind-body {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .grind-body strong { color: var(--text-primary); }
+
+  /* ── Temperature summary ── */
+  .temp-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin-bottom: 0;
+  }
+
+  .temp-card {
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.7rem 0.6rem;
+    text-align: center;
+  }
+
+  .temp-label {
+    font-size: 9.5px;
+    color: var(--text-tertiary);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .temp-num {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+  }
+
+  .temp-sub {
+    font-size: 9.5px;
+    color: var(--text-tertiary);
+    margin-top: 2px;
+  }
+
+  /* Temperature accent colors */
+  .temp-card:nth-child(1) { border-top: 2.5px solid var(--accent-teal); }
+  .temp-card:nth-child(2) { border-top: 2.5px solid var(--accent-blue); }
+  .temp-card:nth-child(3) { border-top: 2.5px solid var(--accent-amber); }
+  .temp-card:nth-child(4) { border-top: 2.5px solid var(--accent-coral); }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    padding-top: 2rem;
+  }
+
+  .footer-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-line::before,
+  .footer-line::after {
+    content: '';
+    width: 36px;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .footer-text {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .sig {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent-coral);
+    letter-spacing: 0.04em;
+    margin-top: 2px;
+  }
+
+  .sig-sub {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-top: 2px;
+  }
+
+  /* ── Multiplier tags ── */
+  .mult-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: var(--bg-deep);
+    color: var(--text-inverse);
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+
+  /* ── Responsive padding ── */
+  @media (max-width: 380px) {
+    .wrap { padding: 1.5rem 1rem 2.5rem; }
+    .temp-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+
+<div class="wrap">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="brand">Terroir.idn · Conical Barista</div>
+    <div class="title">CT62 <span>Recipe</span></div>
+    <div class="subtitle">V60 · Dual Steep Method · Bahrell</div>
+  </div>
+
+  <!-- Calculator -->
+  <div class="card calc-card">
+    <div class="calc-label">Dosis kopi — semua volume menyesuaikan otomatis</div>
+    <div class="calc-row">
+      <input type="range" id="gram-slider" min="10" max="25" value="15" step="1">
+      <div class="gram-val"><span id="gram-display">15</span>g</div>
+    </div>
+    <div class="gram-range-labels"><span>10g</span><span>25g</span></div>
+  </div>
+
+  <!-- Volume Grid -->
+  <div class="section-title">Volume cumulative</div>
+  <div class="vol-grid">
+    <div class="vol-card">
+      <div class="vol-label">Bloom <span class="mult-tag">×3</span></div>
+      <div class="vol-num" id="v1">45</div>
+      <div class="vol-sub">ml kumulatif</div>
+    </div>
+    <div class="vol-card">
+      <div class="vol-label">Pour ke-2 <span class="mult-tag">×7</span></div>
+      <div class="vol-num" id="v2">105</div>
+      <div class="vol-sub">ml kumulatif</div>
+    </div>
+    <div class="vol-card">
+      <div class="vol-label">Pour ke-3 <span class="mult-tag">×11</span></div>
+      <div class="vol-num" id="v3">165</div>
+      <div class="vol-sub">ml kumulatif</div>
+    </div>
+    <div class="vol-card">
+      <div class="vol-label">Pour ke-4 <span class="mult-tag">×15</span></div>
+      <div class="vol-num" id="v4">225</div>
+      <div class="vol-sub">ml total</div>
+    </div>
+  </div>
+
+  <!-- Brewing Steps -->
+  <div class="section-title">Tahapan brewing</div>
+  <div class="steps">
+
+    <div class="step">
+      <div class="step-num bloom">1</div>
+      <div class="step-body">
+        <div class="step-head">Bloom — 0:00 → 0:55</div>
+        <div class="step-detail">Tuang <strong id="bloom-ml">45ml</strong> air suhu <strong>97°C</strong>. Aduk 10 kali merata. Tutup dripper.</div>
+        <span class="badge badge-teal">Rendem pertama — ekstrak flavour</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num pour">2</div>
+      <div class="step-body">
+        <div class="step-head">Pour ke-2 — 0:55 → 1:05</div>
+        <div class="step-detail">Buka tutup. Tuang air suhu <strong>92°C</strong> hingga total kumulatif <strong id="p2-ml">105ml</strong>. Aduk 5 kali.</div>
+        <div class="step-detail">Tutup kembali di menit <strong>1:10</strong>.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num rest">3</div>
+      <div class="step-body">
+        <div class="step-head">Pour ke-3 — 2:10</div>
+        <div class="step-detail">Buka tutup. Tuang air suhu <strong>92°C</strong> hingga total kumulatif <strong id="p3-ml">165ml</strong>.</div>
+        <span class="badge badge-amber">Rendem kedua — balance &amp; tekstur</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num finish">4</div>
+      <div class="step-body">
+        <div class="step-head">Pour ke-4 — finish</div>
+        <div class="step-detail">Tuang air suhu <strong>70°C</strong> hingga total <strong id="p4-ml">225ml</strong>. Biarkan drawdown sempurna.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="divider">
+
+  <!-- Grind Adjustment -->
+  <div class="section-title">Penyesuaian gilingan</div>
+  <div class="grind-section">
+    <div class="grind-card">
+      <div class="grind-head">Gilingan halus</div>
+      <div class="grind-body">Bloom lebih cepat. Interval: <strong>20 – 25 – 25 – 25 detik</strong>. Jaga waktu lebih ketat.</div>
+    </div>
+    <div class="grind-card">
+      <div class="grind-head">Gilingan kasar — Hi-flux / Sibarist paper</div>
+      <div class="grind-body">Flow lebih cepat. Bloom diperlama: <strong>45 – 45 – 30 – 30 – 30 detik</strong>. Waktu bisa dilama, tidak masalah.</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Temperature Summary -->
+  <div class="section-title">Ringkasan suhu</div>
+  <div class="temp-grid">
+    <div class="temp-card">
+      <div class="temp-label">Bloom</div>
+      <div class="temp-num">97°C</div>
+      <div class="temp-sub">aduk 10×</div>
+    </div>
+    <div class="temp-card">
+      <div class="temp-label">Pour ke-2</div>
+      <div class="temp-num">92°C</div>
+      <div class="temp-sub">aduk 5×</div>
+    </div>
+    <div class="temp-card">
+      <div class="temp-label">Pour ke-3</div>
+      <div class="temp-num">92°C</div>
+      <div class="temp-sub">rendem 2</div>
+    </div>
+    <div class="temp-card">
+      <div class="temp-label">Finish</div>
+      <div class="temp-num">70°C</div>
+      <div class="temp-sub">drawdown</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-line">
+      <div class="footer-text">Resep oleh</div>
+    </div>
+    <div class="sig">Bahrell</div>
+    <div class="sig-sub">Terroir.idn · Conical Barista</div>
+  </div>
+
+</div>
+
+<script>
+  const slider = document.getElementById('gram-slider');
+  function update() {
+    const g = parseInt(slider.value);
+    document.getElementById('gram-display').textContent = g;
+    document.getElementById('v1').textContent = g * 3;
+    document.getElementById('v2').textContent = g * 7;
+    document.getElementById('v3').textContent = g * 11;
+    document.getElementById('v4').textContent = g * 15;
+    document.getElementById('bloom-ml').textContent = (g * 3) + 'ml';
+    document.getElementById('p2-ml').textContent = (g * 7) + 'ml';
+    document.getElementById('p3-ml').textContent = (g * 11) + 'ml';
+    document.getElementById('p4-ml').textContent = (g * 15) + 'ml';
+  }
+  slider.addEventListener('input', update);
+  update();
+</script>
