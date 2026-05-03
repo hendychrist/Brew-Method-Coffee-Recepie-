@@ -7,17 +7,13 @@
       "use": "@vercel/static"
     },
     {
-      "src": "v60-Photoroom.png",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "fellowEkg.png",
+      "src": "assets/**",
       "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/(.*\\.(png|jpg|jpeg|svg|gif|ico))$",
+      "src": "/(.*\\.(png|jpg|jpeg|svg|gif|ico|webp|mp4|webm))$",
       "dest": "/$1"
     },
     {

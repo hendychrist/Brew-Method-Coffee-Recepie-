@@ -1,682 +1,1798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CT62 — Terroir.idn</title>
 <style>
-  :root {
-    --bg-page: #F5F0EB;
-    --bg-card: #FDFAF7;
-    --bg-inset: #F0EBE3;
-    --bg-deep: #1C140A;
-    --border: #E0D8CC;
-    --border-soft: #EDE6DB;
+/* ═══════════════════════════════════════
+   TOKENS — Apple MacBook Pro Dark Style
+═══════════════════════════════════════ */
+:root {
+  --bg:         #000000;
+  --bg-1:       #0a0a0a;
+  --bg-2:       #141414;
+  --bg-3:       #1c1c1e;
+  --bg-4:       #2c2c2e;
 
-    --text-primary: #1A1008;
-    --text-secondary: #6B5D4F;
-    --text-tertiary: #9C8E7E;
-    --text-inverse: #FDFAF7;
+  --glass:      rgba(28, 28, 30, 0.72);
+  --glass-2:    rgba(44, 44, 46, 0.5);
 
-    --accent-teal: #0F6E56;
-    --accent-teal-bg: #E1F5EE;
-    --accent-teal-text: #0A5A45;
+  --border:     rgba(255,255,255,0.08);
+  --border-m:   rgba(255,255,255,0.13);
+  --border-s:   rgba(255,255,255,0.22);
 
-    --accent-blue: #185FA5;
-    --accent-blue-bg: #E6F1FB;
-    --accent-blue-text: #144F8A;
+  --ink:        #f5f5f7;
+  --ink-2:      #a1a1a6;
+  --ink-3:      #6e6e73;
+  --ink-4:      #3a3a3c;
 
-    --accent-amber: #854F0B;
-    --accent-amber-bg: #FAEEDA;
-    --accent-amber-text: #6E4009;
+  --gold:       #c4a46b;
+  --gold-l:     #d4b87a;
+  --gold-d:     #8f6e3a;
+  --ember:      #c2703a;
+  --teal:       #30b08f;
+  --blue:       #4a9eff;
 
-    --accent-coral: #C25A3A;
-    --accent-coral-bg: #FDECEA;
-    --accent-coral-text: #A04B30;
+  --r-xl:       28px;
+  --r-lg:       20px;
+  --r-md:       16px;
+  --r-sm:       12px;
+  --r-xs:       8px;
 
-    --shadow-sm: 0 1px 3px rgba(26, 16, 8, 0.07);
-    --shadow-md: 0 2px 8px rgba(26, 16, 8, 0.08);
-    --shadow-lg: 0 4px 16px rgba(26, 16, 8, 0.10);
+  --ff: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+  --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
 
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    --radius-xl: 20px;
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--bg); scroll-behavior: auto; }
+body {
+  font-family: var(--ff);
+  background: var(--bg);
+  color: var(--ink);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: var(--gold); color: #000; }
+
+/* ── Grain overlay ── */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 9999;
+  pointer-events: none;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px;
+}
+
+/* ═══════════════════════════════════════
+   NAV — translucent Apple pill nav
+═══════════════════════════════════════ */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  height: 52px;
+  display: flex; align-items: center;
+  background: rgba(0,0,0,0.72);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.4s;
+}
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-brand {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.nav-brand em { color: var(--gold); font-style: normal; }
+.nav-links {
+  display: flex; gap: 0;
+  position: absolute; left: 50%; transform: translateX(-50%);
+}
+.nav-links a {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ink-2);
+  text-decoration: none;
+  padding: 0 14px;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-cta {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--gold);
+  letter-spacing: 0.01em;
+}
+
+/* ═══════════════════════════════════════
+   HERO — Apple MacBook Pro style
+   Pure black, product bleeds in, text bottom-left
+═══════════════════════════════════════ */
+.hero {
+  height: 100svh;
+  min-height: 600px;
+  position: relative;
+  overflow: hidden;
+  background: #000;
+  padding-top: 52px;
+}
+
+/* Subtle rim light behind product — like Apple's studio lighting */
+.hero-glow {
+  position: absolute;
+  top: -10%; left: 50%; transform: translateX(-10%);
+  width: 70%; height: 100%;
+  background:
+    radial-gradient(ellipse 55% 55% at 55% 42%, rgba(196,164,107,0.045) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 40% at 75% 60%, rgba(255,255,255,0.01) 0%, transparent 55%);
+  pointer-events: none; z-index: 1;
+}
+
+/* Product image — fills right side, bleeds like Apple MacBook Pro */
+.hero-product {
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 65%;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2;
+}
+.hero-product img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  /* Dark bg image — blends seamlessly with #000 website */
+  filter: brightness(0.92) contrast(1.05);
+  opacity: 0;
+  transform: scale(1.02);
+  animation: up 1.6s var(--ease) 0.4s forwards;
+}
+
+/* Left-side gradient — blends image into black where text sits */
+.hero-product::before {
+  content: '';
+  position: absolute; inset: 0; z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(to right, #000 0%, rgba(0,0,0,0.5) 30%, transparent 60%);
+}
+/* Bottom fade into next section */
+.hero-product::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 4;
+  height: 40%;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, #000);
+}
+
+/* Bottom gradient — fades product into black, like Apple */
+.hero-product::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 35%;
+  background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 70%, #000 100%);
+  z-index: 3;
+}
+
+/* Text — bottom-left, Apple layout */
+.hero-text {
+  position: absolute;
+  bottom: clamp(2.5rem, 6vh, 5rem);
+  left: clamp(2rem, 6vw, 6rem);
+  z-index: 10;
+  max-width: 580px;
+}
+
+.hero-eyebrow {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--ink-2);
+  display: block;
+  margin-bottom: 0.4rem;
+  opacity: 0; transform: translateY(10px);
+  animation: up 0.7s var(--ease) 0.3s forwards;
+}
+
+.hero-title {
+  font-size: clamp(2.6rem, 6vw, 5.2rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.02;
+  color: var(--ink);
+  opacity: 0; transform: translateY(16px);
+  animation: up 0.9s var(--ease) 0.45s forwards;
+}
+.hero-title .accent { color: var(--gold); }
+
+.hero-sub {
+  font-size: clamp(14px, 1.4vw, 17px);
+  font-weight: 400;
+  color: var(--ink-2);
+  margin-top: 0.6rem;
+  letter-spacing: -0.01em;
+  opacity: 0; transform: translateY(10px);
+  animation: up 0.7s var(--ease) 0.65s forwards;
+}
+
+.hero-microcopy {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--ink-3);
+  margin-top: 0.35rem;
+  opacity: 0;
+  animation: fadeIn 0.7s ease 0.85s forwards;
+}
+
+.hero-cta {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 1.5rem;
+  font-size: 14px; font-weight: 500;
+  color: var(--blue);
+  text-decoration: none;
+  opacity: 0;
+  animation: fadeIn 0.7s ease 1s forwards;
+  transition: color 0.2s;
+  cursor: pointer;
+}
+.hero-cta:hover { color: #7ab8ff; }
+.hero-cta::after {
+  content: '›';
+  font-size: 1.2em; line-height: 1;
+}
+
+@keyframes up { to { opacity: 1; transform: none; } }
+@keyframes fadeIn { to { opacity: 1; } }
+@keyframes bounce {
+  0%, 100% { transform: translateY(-5px); opacity: 0.4; }
+  50% { transform: translateY(8px); opacity: 1; }
+}
+
+/* ═══════════════════════════════════════
+   SPECS STRIP — inline stats bar
+═══════════════════════════════════════ */
+.specs-strip {
+  display: flex; align-items: stretch;
+  justify-content: center;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-1);
+}
+.spec-item {
+  flex: 1;
+  max-width: 240px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  border-right: 1px solid var(--border);
+}
+.spec-item:last-child { border-right: none; }
+.spec-val {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--ink);
+}
+.spec-val .unit {
+  font-size: 0.45em; font-weight: 400;
+  color: var(--gold); vertical-align: super; margin-left: 2px;
+}
+.spec-label {
+  font-size: 11px; font-weight: 500;
+  color: var(--ink-3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+
+/* ═══════════════════════════════════════
+   BENTO GRID
+═══════════════════════════════════════ */
+.bento-section {
+  padding: 6rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.bento-label {
+  font-size: 12px; font-weight: 500;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 3rem;
+  text-align: center;
+}
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto;
+  gap: 16px;
+}
+
+/* Glass card base */
+.bcard {
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease), border-color 0.3s;
+}
+.bcard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px var(--border-m);
+  border-color: var(--border-m);
+}
+
+/* Card sizes */
+.bcard-tall { grid-row: span 2; }
+.bcard-wide { grid-column: span 2; }
+.bcard-full { grid-column: span 3; }
+
+/* Inner padding */
+.bcard-body { padding: 2rem; height: 100%; display: flex; flex-direction: column; }
+.bcard-tag {
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: 1rem;
+}
+.bcard-title {
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--ink);
+}
+.bcard-title .g { color: var(--gold); }
+.bcard-sub {
+  font-size: 14px; font-weight: 400;
+  color: var(--ink-2); line-height: 1.6;
+  margin-top: 0.75rem;
+}
+.bcard-num {
+  font-size: clamp(3.5rem, 7vw, 5.5rem);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  color: var(--ink);
+  margin-top: auto;
+  padding-top: 1.5rem;
+}
+.bcard-num .unit { font-size: 0.38em; font-weight: 400; color: var(--gold); vertical-align: super; }
+
+/* Product photo card */
+.bcard-photo {
+  min-height: 420px;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-2);
+}
+.bcard-photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.8s var(--ease);
+}
+.bcard-photo:hover img { transform: scale(1.04); }
+.bcard-photo-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
+  z-index: 1;
+}
+.bcard-photo-label {
+  position: absolute; bottom: 1.5rem; left: 1.75rem;
+  z-index: 2;
+  font-size: 18px; font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.bcard-photo-sub {
+  position: absolute; bottom: 0.85rem; left: 1.75rem;
+  z-index: 2;
+  font-size: 12px; font-weight: 400;
+  color: var(--ink-2);
+}
+
+/* Temp visual card */
+.temp-visual {
+  min-height: 220px;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.temp-bars {
+  display: flex; align-items: flex-end; gap: 10px;
+  padding: 0 2rem 2rem;
+  height: 130px;
+}
+.temp-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.temp-bar {
+  width: 100%;
+  border-radius: 6px 6px 2px 2px;
+  transition: height 0.8s var(--ease);
+}
+.temp-bar-label { font-size: 10px; font-weight: 500; color: var(--ink-3); text-align: center; }
+.temp-bar-val { font-size: 13px; font-weight: 700; color: var(--ink); }
+
+/* Pour phase grid card */
+.phase-list { margin-top: 1.25rem; display: flex; flex-direction: column; gap: 10px; }
+.phase-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px;
+  background: var(--bg-3);
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+  transition: background 0.2s, border-color 0.2s;
+}
+.phase-row:hover { background: var(--bg-4); border-color: var(--border-m); }
+.phase-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%; flex-shrink: 0;
+}
+.phase-name { font-size: 13px; font-weight: 600; color: var(--ink); flex: 1; }
+.phase-time { font-size: 12px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.phase-temp {
+  font-size: 12px; font-weight: 600;
+  padding: 3px 9px; border-radius: 99px;
+  background: var(--glass-2);
+  color: var(--gold);
+}
+
+/* Ratio card */
+.ratio-display {
+  margin-top: auto;
+  padding-top: 2rem;
+  display: flex; align-items: baseline; gap: 0.25rem;
+}
+.ratio-n {
+  font-size: clamp(4rem, 8vw, 6rem);
+  font-weight: 700;
+  letter-spacing: -0.06em;
+  line-height: 0.9;
+  color: var(--ink);
+}
+.ratio-sep {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300;
+  color: var(--ink-3);
+  margin: 0 4px;
+}
+.ratio-sub { font-size: 12px; color: var(--ink-3); margin-top: 8px; }
+
+/* Calculator card — large */
+.calc-card-bento {
+  min-height: 280px;
+}
+.calc-inner-bento {
+  display: flex; align-items: center; gap: 2rem;
+  margin-top: auto; padding-top: 1.5rem;
+}
+.calc-readout {
+  font-size: clamp(5rem, 10vw, 7rem);
+  font-weight: 700;
+  letter-spacing: -0.06em;
+  line-height: 0.85;
+  color: var(--gold);
+  white-space: nowrap;
+}
+.calc-readout .unit { font-size: 0.35em; font-weight: 400; color: var(--ink-2); }
+.calc-slider-wrap { flex: 1; }
+.calc-slider-label {
+  font-size: 11px; font-weight: 500;
+  color: var(--ink-3); letter-spacing: 0.06em;
+  text-transform: uppercase; margin-bottom: 0.75rem;
+}
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%; height: 4px;
+  border-radius: 99px;
+  background: var(--bg-4);
+  outline: none; cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px; height: 22px;
+  background: var(--ink);
+  border-radius: 50%;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  cursor: pointer;
+  transition: transform 0.15s var(--ease-spring), background 0.2s;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  background: var(--gold);
+  transform: scale(1.15);
+}
+.preset-row {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 1rem;
+}
+.preset-btn {
+  font-family: var(--ff);
+  font-size: 12px; font-weight: 500;
+  padding: 6px 14px;
+  border: 1px solid var(--border-m);
+  border-radius: 99px;
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+}
+.preset-btn:hover, .preset-btn.active {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #000;
+}
+
+/* Vol outputs inside bento */
+.vol-out {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+  background: var(--border);
+  border-radius: var(--r-xs);
+  overflow: hidden;
+  margin-top: 1.5rem;
+}
+.vol-cell {
+  background: var(--bg-3);
+  padding: 1rem 0.75rem;
+  text-align: center;
+  transition: background 0.2s;
+}
+.vol-cell:hover { background: var(--bg-4); }
+.vol-cell-label { font-size: 10px; font-weight: 500; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+.vol-cell-val { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.04em; color: var(--ink); }
+.vol-cell-sub { font-size: 10px; color: var(--ink-3); margin-top: 3px; }
+
+/* ═══════════════════════════════════════
+   VIDEO TEXT MASK SCROLL SECTION
+═══════════════════════════════════════ */
+.video-section {
+  position: relative;
+  height: 360vh;
+  background: #000;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.video-pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 620px;
+  overflow: hidden;
+  background: #000;
+  isolation: isolate;
+}
+.video-pin::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 26%;
+  z-index: 8;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, #000);
+}
+.video-orb-layer,
+.video-mask-layer,
+.video-gradient-layer {
+  position: relative;
+  overflow: hidden;
+}
+.video-orb-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 1;
+  transform: scale(1);
+}
+.macro-video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+.video-orb {
+  position: absolute;
+  overflow: hidden;
+  border-radius: 50%;
+  filter: saturate(1.12) contrast(1.08);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+  will-change: transform, opacity;
+}
+.video-orb-a {
+  top: -22vmin;
+  left: -12vmin;
+  width: 78vmin;
+  height: 78vmin;
+}
+.video-orb-b {
+  right: -5vmin;
+  top: 7vmin;
+  width: 76vmin;
+  height: 118vmin;
+  border-radius: 50% 0 0 50%;
+}
+.video-orb-c {
+  left: 28vmin;
+  bottom: -36vmin;
+  width: 82vmin;
+  height: 82vmin;
+  border-radius: 50% 50% 0 0;
+  opacity: 0.55;
+}
+.video-mask-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  opacity: 0;
+  transform: scale(1.08);
+  will-change: transform, opacity;
+}
+.video-mask-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.mask-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(1.18) contrast(1.12);
+}
+.video-gradient-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(26px) scale(0.98);
+  will-change: transform, opacity;
+}
+.video-gradient-kicker {
+  margin-bottom: 1.2rem;
+  color: var(--ink);
+  font-size: clamp(1rem, 1.8vw, 1.35rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+.video-gradient-title {
+  max-width: 1120px;
+  background: linear-gradient(95deg, #f8ffff 0%, #bfeee7 34%, #7fb8c8 68%, #4a7b99 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(3.1rem, 8.4vw, 7.4rem);
+  font-weight: 700;
+  letter-spacing: -0.07em;
+  line-height: 0.96;
+}
+.video-gradient-copy {
+  max-width: 720px;
+  margin-top: 2.2rem;
+  color: var(--ink-2);
+  font-size: clamp(1rem, 1.65vw, 1.35rem);
+  font-weight: 600;
+  line-height: 1.35;
+}
+.video-gradient-copy strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+.video-scroll-label {
+  position: absolute;
+  left: 50%;
+  bottom: 2rem;
+  z-index: 9;
+  transform: translateX(-50%);
+  color: var(--ink-3);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════════
+   BREWING SCROLL SECTION
+═══════════════════════════════════════ */
+.brew-section {
+  position: relative;
+  height: 450vh;
+}
+.brew-canvas {
+  position: sticky; top: 0;
+  height: 100svh; min-height: 640px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(480px, 560px) minmax(180px, 0.62fr);
+  gap: clamp(18px, 3vw, 44px);
+  align-items: center;
+}
+.brew-left {
+  padding: 0 0 0 clamp(1.5rem, 4vw, 4rem);
+  position: relative; min-height: 260px;
+  z-index: 10;
+}
+.brew-right {
+  padding: 0 clamp(1.5rem, 4vw, 4rem) 0 0;
+  z-index: 10;
+  display: flex; flex-direction: column; gap: 1.75rem;
+}
+.brew-center {
+  position: relative;
+  height: 100svh;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* Phase text panels */
+.brew-phase {
+  position: absolute; width: 100%;
+  opacity: 0; transform: translateY(14px);
+  transition: opacity 0.55s var(--ease), transform 0.55s var(--ease);
+  pointer-events: none;
+}
+.brew-phase.active { opacity: 1; transform: none; pointer-events: auto; }
+
+.phase-eyebrow {
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 0.75rem;
+}
+.phase-h {
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  color: var(--ink);
+  margin-bottom: 0.75rem;
+}
+.phase-p {
+  font-size: 15px; font-weight: 400;
+  color: var(--ink-2); line-height: 1.7;
+  max-width: 280px;
+}
+.phase-p strong { color: var(--ink); font-weight: 600; }
+.phase-pills {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1.25rem;
+}
+.ppill {
+  font-size: 12px; font-weight: 500;
+  padding: 5px 13px;
+  border: 1px solid var(--border-m);
+  border-radius: 99px;
+  color: var(--ink-2);
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+}
+.ppill.hi { border-color: var(--gold); color: var(--gold); }
+
+/* Live metrics */
+.brew-metric { opacity: 0.25; transition: opacity 0.4s; }
+.brew-metric.on { opacity: 1; }
+.bm-label { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 4px; }
+.bm-val { font-size: 2rem; font-weight: 700; letter-spacing: -0.04em; color: var(--ink); line-height: 1; }
+.bm-val em { font-style: normal; font-size: 0.7em; font-weight: 400; color: var(--gold); margin-left: 2px; }
+
+/* Progress dots */
+.brew-dots { display: flex; gap: 8px; margin-top: 0.5rem; }
+.bdot { width: 6px; height: 6px; border-radius: 50%; background: var(--bg-4); transition: background 0.4s, transform 0.4s; }
+.bdot.on { background: var(--gold); transform: scale(1.3); }
+
+/* Brew scene */
+.brew-scene { position: relative; width: 540px; height: 560px; }
+.brew-kettle { position: absolute; top: 24px; left: 44px; width: 220px; transform-origin: 80% 74%; will-change: transform; z-index: 4; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.6)); transform: translateX(-8%) rotate(-3deg); }
+.brew-dripper { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 220px; z-index: 2; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.7)); }
+.brew-water { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; overflow: visible; }
+
+/* CT62 actual photo in brew scene */
+.brew-dripper-photo {
+  position: absolute; bottom: 20px; left: 50%;
+  transform: translateX(-50%);
+  width: 360px; z-index: 2;
+  transition: opacity 0.6s var(--ease);
+}
+
+/* ═══════════════════════════════════════
+   STEPS — Apple-style timeline
+═══════════════════════════════════════ */
+.steps-section {
+  padding: 7rem 2rem;
+  border-top: 1px solid var(--border);
+}
+.steps-inner { max-width: 800px; margin: 0 auto; }
+.steps-hd { text-align: center; margin-bottom: 5rem; }
+.steps-hd-eyebrow { font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 0.75rem; }
+.steps-hd-title { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; letter-spacing: -0.04em; line-height: 1; }
+
+.steps-list { display: flex; flex-direction: column; }
+.step-row {
+  display: grid; grid-template-columns: 80px 1fr;
+  gap: 1.5rem;
+  padding: 2.5rem 0;
+  border-bottom: 1px solid var(--border);
+  opacity: 0; transform: translateY(16px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.step-row:last-child { border-bottom: none; }
+.step-row.vis { opacity: 1; transform: none; }
+.step-num-col {
+  display: flex; flex-direction: column; align-items: center; padding-top: 2px;
+}
+.step-num-circle {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-m);
+  background: var(--bg-2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 700;
+  letter-spacing: -0.02em;
+  transition: border-color 0.4s, background 0.4s;
+}
+.step-row[data-s="1"] .step-num-circle { color: var(--teal); border-color: var(--teal); }
+.step-row[data-s="2"] .step-num-circle { color: var(--blue); border-color: var(--blue); }
+.step-row[data-s="3"] .step-num-circle { color: var(--gold); border-color: var(--gold); }
+.step-row[data-s="4"] .step-num-circle { color: var(--ember); border-color: var(--ember); }
+.step-meta { font-size: 11px; font-weight: 500; color: var(--ink-3); margin-top: 0.5rem; letter-spacing: 0.04em; }
+.step-body-col { padding-top: 0.5rem; }
+.step-timing { font-size: 12px; font-weight: 600; color: var(--ink-3); letter-spacing: 0.02em; margin-bottom: 0.4rem; }
+.step-name { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 0.5rem; color: var(--ink); }
+.step-desc { font-size: 14px; color: var(--ink-2); line-height: 1.7; font-weight: 400; }
+.step-desc strong { color: var(--ink); font-weight: 600; }
+.step-desc .hi { color: var(--gold); font-weight: 600; }
+.step-chip {
+  display: inline-block; margin-top: 0.75rem;
+  font-size: 11px; font-weight: 600;
+  padding: 4px 12px; border-radius: 99px;
+  letter-spacing: 0.04em;
+}
+.step-row[data-s="1"] .step-chip { background: rgba(48,176,143,0.1); color: var(--teal); }
+.step-row[data-s="3"] .step-chip { background: rgba(196,164,107,0.1); color: var(--gold); }
+
+/* ═══════════════════════════════════════
+   PARAMS BENTO — temp + grind
+═══════════════════════════════════════ */
+.params-section {
+  padding: 6rem 2rem;
+  border-top: 1px solid var(--border);
+  background: var(--bg-1);
+}
+.params-inner { max-width: 1000px; margin: 0 auto; }
+.params-title { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 700; letter-spacing: -0.04em; margin-bottom: 0.5rem; }
+.params-sub { font-size: 15px; color: var(--ink-2); margin-bottom: 3rem; }
+
+.params-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 2rem;
+}
+.pcard {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 1.5rem 1.25rem;
+  text-align: center;
+  position: relative; overflow: hidden;
+  transition: transform 0.3s var(--ease), border-color 0.3s;
+}
+.pcard:hover { transform: translateY(-3px); border-color: var(--border-m); }
+.pcard::before {
+  content: '';
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 30px; height: 2px; border-radius: 0 0 2px 2px;
+}
+.pcard[data-c="1"]::before { background: var(--teal); }
+.pcard[data-c="2"]::before { background: var(--blue); }
+.pcard[data-c="3"]::before { background: var(--gold); }
+.pcard[data-c="4"]::before { background: var(--ember); }
+.pcard-label { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 0.75rem; }
+.pcard-val { font-size: 2.2rem; font-weight: 700; letter-spacing: -0.04em; line-height: 1; color: var(--ink); }
+.pcard-val em { font-style: normal; font-size: 0.55em; font-weight: 400; color: var(--gold); }
+.pcard-sub { font-size: 11px; color: var(--ink-3); margin-top: 0.5rem; }
+
+/* Grind toggle */
+.grind-box {
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 2rem;
+  position: relative; overflow: hidden;
+}
+.grind-box::before {
+  content: '';
+  position: absolute; top: 0; left: 30%; right: 30%; height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold-d), transparent);
+}
+.grind-toggle {
+  display: flex; gap: 4px;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 4px;
+  width: fit-content;
+  margin-bottom: 1.5rem;
+}
+.grind-tab {
+  font-family: var(--ff);
+  font-size: 13px; font-weight: 500;
+  padding: 8px 18px;
+  border-radius: 99px;
+  border: none; background: transparent;
+  color: var(--ink-3); cursor: pointer;
+  transition: all 0.3s var(--ease);
+}
+.grind-tab.active { background: var(--ink); color: #000; }
+.grind-panel { display: none; }
+.grind-panel.active { display: block; animation: fadeIn 0.3s ease; }
+.grind-h { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+.grind-h .g { color: var(--gold); }
+.grind-p { font-size: 14px; color: var(--ink-2); line-height: 1.7; }
+.grind-p strong { color: var(--ink); font-family: "SF Mono", monospace; font-size: 13px; }
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+.footer {
+  padding: 5rem 2rem 3rem;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+}
+.footer-title {
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 700; letter-spacing: -0.04em;
+  color: var(--gold); margin-bottom: 0.5rem;
+}
+.footer-sub { font-size: 14px; color: var(--ink-3); }
+.footer-rule { width: 40px; height: 1px; background: var(--border-m); margin: 2rem auto; }
+.footer-copy { font-size: 13px; color: var(--ink-3); }
+
+/* ═══════════════════════════════════════
+   REVEAL UTILITY
+═══════════════════════════════════════ */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); }
+.reveal.vis { opacity: 1; transform: none; }
+.reveal.d1 { transition-delay: 0.1s; }
+.reveal.d2 { transition-delay: 0.2s; }
+.reveal.d3 { transition-delay: 0.3s; }
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media (max-width: 1060px) {
+  .hero-product { width: 80%; right: -8%; }
+  .hero-title { font-size: clamp(2.2rem, 7vw, 4rem); }
+  .video-orb-a { width: 70vmin; height: 70vmin; }
+  .video-orb-b { width: 70vmin; height: 108vmin; }
+  .video-mask-svg text { font-size: 102px; letter-spacing: -6px; }
+  .bento-grid { grid-template-columns: repeat(2, 1fr); }
+  .bcard-tall { grid-row: span 1; }
+  .bcard-full { grid-column: span 2; }
+  .brew-canvas { grid-template-columns: 1fr; align-content: start; padding-top: 60px; }
+  .brew-left { padding: 0 2rem; text-align: center; }
+  .brew-right { flex-direction: row; justify-content: center; padding: 0 2rem; }
+  .brew-center { height: auto; min-height: 400px; }
+  .brew-scene { width: min(92vw, 480px); height: 460px; }
+  .brew-kettle { top: 18px; left: 42px; width: 180px; }
+  .brew-dripper-photo { width: 300px; }
+  .params-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 760px) {
+  .nav-links { display: none; }
+  /* Hero mobile — product above, text below */
+  .hero { display: flex; flex-direction: column; }
+  .hero-product {
+    position: relative; top: auto; right: auto; bottom: auto;
+    width: 100%; height: 55svh;
+    display: flex; align-items: flex-end; justify-content: center;
   }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--bg-page);
-    color: var(--text-primary);
-    -webkit-font-smoothing: antialiased;
+  .hero-product img { width: 85%; max-height: 100%; }
+  .hero-product::after { height: 25%; }
+  .hero-text {
+    position: relative; bottom: auto; left: auto;
+    padding: 0 1.5rem 3rem;
+    margin-top: -3rem;
   }
-
-  /* ── Page Shell (3-column layout) ── */
-  .page-shell {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 2.5rem 1.5rem 3rem;
-    display: grid;
-    grid-template-columns: 1fr 420px 1fr;
-    gap: 2rem;
-    align-items: start;
-    min-height: 100vh;
+  .hero-title { font-size: clamp(2rem, 9vw, 3rem); }
+  .video-section { height: 320vh; }
+  .video-pin { min-height: 560px; }
+  .video-orb-a {
+    top: -12vmin;
+    left: -26vmin;
+    width: 78vmin;
+    height: 78vmin;
   }
-
-  /* ── Left Column: Decorative Image (Fellow EKG) ── */
-  .hero-art-left {
-    position: relative;
-    min-height: 580px;
-    border-radius: var(--radius-xl);
-    overflow: hidden;
+  .video-orb-b {
+    right: -26vmin;
+    top: 18vmin;
+    width: 82vmin;
+    height: 110vmin;
   }
-
-  .hero-art-left::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: url("/fellowEkg.png");
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: contain;
-    opacity: 0.65;
+  .video-orb-c { display: none; }
+  .video-mask-svg text {
+    font-size: 70px;
+    letter-spacing: -4px;
   }
-
-  /* ── Center Column: Recipe Content ── */
-  .wrap {
-    width: 100%;
-  }
-
-  /* ── Right Column: Hero Art (V60 Background) ── */
-  .hero-art {
-    position: relative;
-    min-height: 580px;
-    border-radius: var(--radius-xl);
-    overflow: hidden;
-  }
-
-  .hero-art::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: url("/v60-Photoroom.png");
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: contain;
-    opacity: 0.65;
-  }
-
-  /* ── Header ── */
-  .header {
-    text-align: center;
-    margin-bottom: 1.75rem;
-  }
-
-  .brand {
-    display: inline-block;
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    color: var(--accent-coral);
-    text-transform: uppercase;
-    font-weight: 600;
-    background: var(--accent-coral-bg);
-    padding: 3px 10px;
-    border-radius: 99px;
-    margin-bottom: 0.75rem;
-  }
-
-  .title {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-    margin-bottom: 0.35rem;
-  }
-
-  .title span { color: var(--accent-coral); }
-
-  .subtitle {
-    font-size: 13px;
-    color: var(--text-tertiary);
-    font-weight: 400;
-    letter-spacing: 0.02em;
-  }
-
-  /* ── Card base ── */
-  .card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius-lg);
-    padding: 1.25rem 1.5rem;
-    box-shadow: var(--shadow-sm);
-  }
-
-  .card + .card { margin-top: 1rem; }
-
-  /* ── Calculator card ── */
-  .calc-card { margin-bottom: 1.25rem; }
-
-  .calc-label {
-    font-size: 11.5px;
-    color: var(--text-secondary);
-    margin-bottom: 1rem;
-    font-weight: 500;
-    letter-spacing: 0.01em;
-  }
-
-  .calc-row {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .gram-val {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    min-width: 52px;
-    line-height: 1;
-    letter-spacing: -0.03em;
-  }
-
-  .gram-val span { color: var(--accent-coral); }
-
-  /* Slider styling */
-  input[type="range"] {
-    -webkit-appearance: none;
-    flex: 1;
-    height: 4px;
-    background: var(--border);
-    border-radius: 99px;
-    outline: none;
-    cursor: pointer;
-  }
-
-  input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 22px;
-    height: 22px;
-    background: var(--accent-coral);
-    border-radius: 50%;
-    box-shadow: 0 1px 4px rgba(194, 90, 58, 0.4);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-  }
-
-  input[type="range"]::-webkit-slider-thumb:hover {
-    transform: scale(1.12);
-    box-shadow: 0 2px 8px rgba(194, 90, 58, 0.5);
-  }
-
-  .gram-range-labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 10px;
-    color: var(--text-tertiary);
-    margin-top: 0.4rem;
-    padding: 0 2px;
-  }
-
-  /* ── Volume Grid ── */
-  .vol-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-    margin-bottom: 1.25rem;
-  }
-
-  .vol-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius-md);
-    padding: 0.9rem 1rem;
-    box-shadow: var(--shadow-sm);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-  }
-
-  .vol-card:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
-
-  .vol-label {
-    font-size: 10.5px;
-    color: var(--text-tertiary);
-    font-weight: 600;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-  }
-
-  .vol-num {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    letter-spacing: -0.03em;
-    line-height: 1.2;
-  }
-
-  .vol-sub {
-    font-size: 10.5px;
-    color: var(--text-tertiary);
-    margin-top: 2px;
-  }
-
-  /* volume card accent colors */
-  .vol-card:nth-child(1) { border-left: 3px solid var(--accent-teal); }
-  .vol-card:nth-child(2) { border-left: 3px solid var(--accent-blue); }
-  .vol-card:nth-child(3) { border-left: 3px solid var(--accent-amber); }
-  .vol-card:nth-child(4) { border-left: 3px solid var(--accent-coral); }
-
-  /* ── Section titles ── */
-  .section-title {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 11px;
-    letter-spacing: 0.10em;
-    color: var(--text-tertiary);
-    text-transform: uppercase;
-    font-weight: 700;
-    margin-bottom: 0.85rem;
-    margin-top: 1.5rem;
-  }
-
-  .section-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border-soft);
-  }
-
-  /* ── Steps ── */
-  .steps { margin-bottom: 1.25rem; }
-
-  .step {
-    display: flex;
-    gap: 0.85rem;
-    margin-bottom: 0.85rem;
-    align-items: flex-start;
-    background: var(--bg-card);
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius-md);
-    padding: 1rem 1.1rem;
-    box-shadow: var(--shadow-sm);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-  }
-
-  .step:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
-
-  .step-num {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    font-weight: 700;
-    flex-shrink: 0;
-    letter-spacing: -0.02em;
-  }
-
-  .step-num.bloom   { background: var(--accent-teal-bg);   color: var(--accent-teal-text); }
-  .step-num.pour    { background: var(--accent-blue-bg);   color: var(--accent-blue-text); }
-  .step-num.rest    { background: var(--accent-amber-bg);  color: var(--accent-amber-text); }
-  .step-num.finish  { background: var(--accent-coral-bg);  color: var(--accent-coral-text); }
-
-  .step-body { flex: 1; }
-
-  .step-head {
-    font-size: 13.5px;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 4px;
-    letter-spacing: -0.01em;
-  }
-
-  .step-detail {
-    font-size: 12.5px;
-    color: var(--text-secondary);
-    line-height: 1.6;
-  }
-
-  .step-detail strong { color: var(--text-primary); font-weight: 600; }
-
-  .step-detail + .step-detail { margin-top: 4px; }
-
-  .badge {
-    display: inline-block;
-    font-size: 10.5px;
-    font-weight: 600;
-    padding: 3px 10px;
-    border-radius: 99px;
-    margin-top: 6px;
-    letter-spacing: 0.01em;
-  }
-
-  .badge-teal   { background: var(--accent-teal-bg);   color: var(--accent-teal-text); }
-  .badge-blue   { background: var(--accent-blue-bg);   color: var(--accent-blue-text); }
-  .badge-amber  { background: var(--accent-amber-bg);  color: var(--accent-amber-text); }
-
-  /* ── Divider ── */
-  .divider {
-    border: none;
-    border-top: 1px solid var(--border-soft);
-    margin: 1.5rem 0;
-  }
-
-  /* ── Grind section ── */
-  .grind-section { margin-bottom: 1.25rem; }
-
-  .grind-card {
-    background: var(--bg-inset);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 0.85rem 1rem;
-    margin-bottom: 8px;
-  }
-
-  .grind-card:last-child { margin-bottom: 0; }
-
-  .grind-head {
-    font-size: 12.5px;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 4px;
-  }
-
-  .grind-body {
-    font-size: 12px;
-    color: var(--text-secondary);
-    line-height: 1.6;
-  }
-
-  .grind-body strong { color: var(--text-primary); }
-
-  /* ── Temperature summary ── */
-  .temp-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 6px;
-    margin-bottom: 0;
-  }
-
-  .temp-card {
-    background: var(--bg-inset);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 0.7rem 0.6rem;
-    text-align: center;
-  }
-
-  .temp-label {
-    font-size: 9.5px;
-    color: var(--text-tertiary);
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-  }
-
-  .temp-num {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    letter-spacing: -0.03em;
-    line-height: 1.2;
-  }
-
-  .temp-sub {
-    font-size: 9.5px;
-    color: var(--text-tertiary);
-    margin-top: 2px;
-  }
-
-  /* Temperature accent colors */
-  .temp-card:nth-child(1) { border-top: 2.5px solid var(--accent-teal); }
-  .temp-card:nth-child(2) { border-top: 2.5px solid var(--accent-blue); }
-  .temp-card:nth-child(3) { border-top: 2.5px solid var(--accent-amber); }
-  .temp-card:nth-child(4) { border-top: 2.5px solid var(--accent-coral); }
-
-  /* ── Footer ── */
-  .footer {
-    text-align: center;
-    padding-top: 2rem;
-  }
-
-  .footer-line {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    justify-content: center;
-    margin-bottom: 0.5rem;
-  }
-
-  .footer-line::before,
-  .footer-line::after {
-    content: '';
-    width: 36px;
-    height: 1px;
-    background: var(--border);
-  }
-
-  .footer-text {
-    font-size: 11px;
-    color: var(--text-tertiary);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-  }
-
-  .sig {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--accent-coral);
-    letter-spacing: 0.04em;
-    margin-top: 2px;
-  }
-
-  .sig-sub {
-    font-size: 11px;
-    color: var(--text-tertiary);
-    margin-top: 2px;
-  }
-
-  /* ── Multiplier tags ── */
-  .mult-tag {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
-    background: var(--bg-deep);
-    color: var(--text-inverse);
-    border-radius: 4px;
-    font-size: 10px;
-    font-weight: 700;
-    margin-left: 4px;
-    vertical-align: middle;
-  }
-
-  /* ── Responsive ── */
-  @media (max-width: 1100px) {
-    .page-shell {
-      grid-template-columns: 1fr 420px 1fr;
-    }
-  }
-
-  @media (max-width: 991px) {
-    .page-shell {
-      grid-template-columns: 1fr;
-      max-width: 520px;
-    }
-
-    .hero-art { display: none; }
-    .hero-art-left { display: none; }
-  }
-
-  @media (max-width: 380px) {
-    .wrap { padding: 1.5rem 1rem 2.5rem; }
-    .temp-grid { grid-template-columns: repeat(2, 1fr); }
-  }
+  .video-gradient-copy { margin-top: 1.4rem; }
+  /* Bento */
+  .bento-grid { grid-template-columns: 1fr; }
+  .bcard-wide, .bcard-full { grid-column: span 1; }
+  .specs-strip { flex-wrap: wrap; }
+  .spec-item { min-width: 50%; border-right: none; border-bottom: 1px solid var(--border); }
+  .vol-out { grid-template-columns: repeat(2, 1fr); }
+  .step-row { grid-template-columns: 60px 1fr; }
+  .params-grid { grid-template-columns: repeat(2, 1fr); }
+  .calc-inner-bento { flex-direction: column; gap: 1.5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  .reveal, .step-row, .brew-phase { opacity: 1; transform: none; }
+}
 </style>
+</head>
+<body>
 
-<div class="page-shell">
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-brand">Terroir<em>.</em>idn</div>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#brew">Brew</a>
+      <a href="#calculator">Ratio</a>
+      <a href="#steps">Steps</a>
+      <a href="#params">Parameters</a>
+      <a href="#video">Macro</a>
+    </nav>
+    <div class="nav-cta">CT62 Recipe</div>
+  </div>
+</nav>
 
-  <!-- Left Column: Decorative Hero Image -->
-  <div class="hero-art-left"></div>
+<!-- ════════ HERO — Apple MacBook Pro layout ════════ -->
+<section class="hero">
+  <!-- Rim light glow behind product -->
+  <div class="hero-glow" aria-hidden="true"></div>
 
-  <!-- Center Column: Recipe Content -->
-  <div class="wrap">
+  <!-- Product — right side, dark bg blends into black website -->
+  <div class="hero-product">
+    <img src="assets/ct62-dark-2.webp" alt="CT62 Transit Dripper" loading="eager">
+  </div>
 
-    <!-- Header -->
-    <div class="header">
-      <div class="brand">Terroir.idn · Conical Barista</div>
-      <div class="title">CT62 <span>Recipe</span></div>
-      <div class="subtitle">V60 · Dual Steep Method · Bahrell</div>
+  <!-- Text — bottom left, Apple style -->
+  <div class="hero-text">
+    <span class="hero-eyebrow">CT62 Transit</span>
+    <h1 class="hero-title">Precision<br>flows through<br><span class="accent">its DNA.</span></h1>
+    <p class="hero-sub">With Dual Steep. Four phases. One perfect cup.</p>
+    <p class="hero-microcopy">Recipe by Bahrell · Terroir.idn · Conical Barista</p>
+    <a class="hero-cta" href="#calculator">Set your dose</a>
+  </div>
+</section>
+
+<!-- ════════ SPECS STRIP ════════ -->
+<div class="specs-strip" role="list" aria-label="Key specs">
+  <div class="spec-item" role="listitem">
+    <div class="spec-val">62<span class="unit">°</span></div>
+    <div class="spec-label">Cone angle</div>
+  </div>
+  <div class="spec-item" role="listitem">
+    <div class="spec-val">1:15</div>
+    <div class="spec-label">Final ratio</div>
+  </div>
+  <div class="spec-item" role="listitem">
+    <div class="spec-val">97<span class="unit">°C</span></div>
+    <div class="spec-label">Bloom temp</div>
+  </div>
+  <div class="spec-item" role="listitem">
+    <div class="spec-val">4</div>
+    <div class="spec-label">Pour phases</div>
+  </div>
+  <div class="spec-item" role="listitem">
+    <div class="spec-val">~4<span class="unit">min</span></div>
+    <div class="spec-label">Total brew time</div>
+  </div>
+</div>
+
+<!-- ════════ BENTO GRID ════════ -->
+<section class="bento-section" aria-label="Recipe overview">
+  <div class="bento-label reveal">Overview</div>
+
+  <div class="bento-grid">
+
+    <!-- Photo card — tall -->
+    <div class="bcard bcard-tall bcard-photo reveal" style="background:#000;">
+      <img src="assets/ct62-dark-1.webp" alt="CT62 Dripper" style="object-fit:cover; object-position:center;">
+      <div class="bcard-photo-overlay"></div>
+      <div class="bcard-photo-label">CT62 Transit</div>
+      <div class="bcard-photo-sub">Conical Dripper · Dual Steep</div>
     </div>
 
-    <!-- Calculator -->
-    <div class="card calc-card">
-      <div class="calc-label">Dosis kopi — semua volume menyesuaikan otomatis</div>
-      <div class="calc-row">
-        <input type="range" id="gram-slider" min="10" max="25" value="15" step="1">
-        <div class="gram-val"><span id="gram-display">15</span>g</div>
+    <!-- Temp visual -->
+    <div class="bcard reveal d1">
+      <div class="bcard-body">
+        <div class="bcard-tag">Temperature cascade</div>
+        <div class="bcard-title">Three temps.<br><span class="g">One extraction.</span></div>
       </div>
-      <div class="gram-range-labels"><span>10g</span><span>25g</span></div>
-    </div>
-
-    <!-- Volume Grid -->
-    <div class="section-title">Volume cumulative</div>
-    <div class="vol-grid">
-      <div class="vol-card">
-        <div class="vol-label">Bloom <span class="mult-tag">×3</span></div>
-        <div class="vol-num" id="v1">45</div>
-        <div class="vol-sub">ml kumulatif</div>
-      </div>
-      <div class="vol-card">
-        <div class="vol-label">Pour ke-2 <span class="mult-tag">×7</span></div>
-        <div class="vol-num" id="v2">105</div>
-        <div class="vol-sub">ml kumulatif</div>
-      </div>
-      <div class="vol-card">
-        <div class="vol-label">Pour ke-3 <span class="mult-tag">×11</span></div>
-        <div class="vol-num" id="v3">165</div>
-        <div class="vol-sub">ml kumulatif</div>
-      </div>
-      <div class="vol-card">
-        <div class="vol-label">Pour ke-4 <span class="mult-tag">×15</span></div>
-        <div class="vol-num" id="v4">225</div>
-        <div class="vol-sub">ml total</div>
-      </div>
-    </div>
-
-    <!-- Brewing Steps -->
-    <div class="section-title">Tahapan brewing</div>
-    <div class="steps">
-
-      <div class="step">
-        <div class="step-num bloom">1</div>
-        <div class="step-body">
-          <div class="step-head">Bloom — 0:00 → 0:55</div>
-          <div class="step-detail">Tuang <strong id="bloom-ml">45ml</strong> air suhu <strong>97°C</strong>. Aduk 10 kali merata. Tutup dripper.</div>
-          <span class="badge badge-teal">Rendem pertama — ekstrak flavour</span>
+      <div class="temp-bars">
+        <div class="temp-bar-wrap">
+          <div class="temp-bar-val">97°</div>
+          <div class="temp-bar" style="height:100%; background: linear-gradient(to top, #30b08f44, #30b08f); border-radius: 6px 6px 2px 2px;"></div>
+          <div class="temp-bar-label">Bloom</div>
+        </div>
+        <div class="temp-bar-wrap">
+          <div class="temp-bar-val">92°</div>
+          <div class="temp-bar" style="height:92%; background: linear-gradient(to top, #4a9eff44, #4a9eff); border-radius: 6px 6px 2px 2px;"></div>
+          <div class="temp-bar-label">Pour</div>
+        </div>
+        <div class="temp-bar-wrap">
+          <div class="temp-bar-val">92°</div>
+          <div class="temp-bar" style="height:92%; background: linear-gradient(to top, #c4a46b44, #c4a46b); border-radius: 6px 6px 2px 2px;"></div>
+          <div class="temp-bar-label">Steep</div>
+        </div>
+        <div class="temp-bar-wrap">
+          <div class="temp-bar-val">70°</div>
+          <div class="temp-bar" style="height:68%; background: linear-gradient(to top, #c2703a44, #c2703a); border-radius: 6px 6px 2px 2px;"></div>
+          <div class="temp-bar-label">Finish</div>
         </div>
       </div>
-
-      <div class="step">
-        <div class="step-num pour">2</div>
-        <div class="step-body">
-          <div class="step-head">Pour ke-2 — 0:55 → 1:05</div>
-          <div class="step-detail">Buka tutup. Tuang air suhu <strong>92°C</strong> hingga total kumulatif <strong id="p2-ml">105ml</strong>. Aduk 5 kali.</div>
-          <div class="step-detail">Tutup kembali di menit <strong>1:10</strong>.</div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num rest">3</div>
-        <div class="step-body">
-          <div class="step-head">Pour ke-3 — 2:10</div>
-          <div class="step-detail">Tuang air suhu <strong>92°C</strong> hingga total kumulatif <strong id="p3-ml">165ml</strong>.</div>
-          <span class="badge badge-amber">Rendem kedua — balance &amp; tekstur</span>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num finish">4</div>
-        <div class="step-body">
-          <div class="step-head">Pour ke-4 — finish</div>
-          <div class="step-detail">Tuang air suhu <strong>70°C</strong> hingga total <strong id="p4-ml">225ml</strong>. Biarkan drawdown sempurna.</div>
-        </div>
-      </div>
-
     </div>
 
-    <hr class="divider">
-
-    <!-- Grind Adjustment -->
-    <div class="section-title">Penyesuaian gilingan</div>
-    <div class="grind-section">
-      <div class="grind-card">
-        <div class="grind-head">Gilingan halus</div>
-        <div class="grind-body">Bloom lebih cepat. Interval: <strong>20 – 25 – 25 – 25 detik</strong>. Jaga waktu lebih ketat.</div>
-      </div>
-      <div class="grind-card">
-        <div class="grind-head">Gilingan kasar — Hi-flux / Sibarist paper</div>
-        <div class="grind-body">Flow lebih cepat. Bloom diperlama: <strong>45 – 45 – 30 – 30 – 30 detik</strong>. Waktu bisa dilama, tidak masalah.</div>
+    <!-- Ratio card -->
+    <div class="bcard reveal d2">
+      <div class="bcard-body">
+        <div class="bcard-tag">Brew ratio</div>
+        <div class="bcard-title">Golden<br><span class="g">ratio.</span></div>
+        <div class="ratio-display">
+          <div class="ratio-n">1</div>
+          <div class="ratio-sep">:</div>
+          <div class="ratio-n">15</div>
+        </div>
+        <div class="ratio-sub">Coffee to water · Dual Steep Method</div>
       </div>
     </div>
 
-    <hr class="divider">
-
-    <!-- Temperature Summary -->
-    <div class="section-title">Ringkasan suhu</div>
-    <div class="temp-grid">
-      <div class="temp-card">
-        <div class="temp-label">Bloom</div>
-        <div class="temp-num">97°C</div>
-        <div class="temp-sub">aduk 10×</div>
-      </div>
-      <div class="temp-card">
-        <div class="temp-label">Pour ke-2</div>
-        <div class="temp-num">92°C</div>
-        <div class="temp-sub">aduk 5×</div>
-      </div>
-      <div class="temp-card">
-        <div class="temp-label">Pour ke-3</div>
-        <div class="temp-num">92°C</div>
-        <div class="temp-sub">rendem 2</div>
-      </div>
-      <div class="temp-card">
-        <div class="temp-label">Finish</div>
-        <div class="temp-num">70°C</div>
-        <div class="temp-sub">drawdown</div>
+    <!-- Pour phases list -->
+    <div class="bcard bcard-wide reveal">
+      <div class="bcard-body">
+        <div class="bcard-tag">Pour phases</div>
+        <div class="bcard-title">Four phases,<br><span class="g">perfect balance.</span></div>
+        <div class="phase-list">
+          <div class="phase-row">
+            <div class="phase-dot" style="background:var(--teal)"></div>
+            <div class="phase-name">Bloom</div>
+            <div class="phase-time">0:00 → 0:55</div>
+            <div class="phase-temp">97°C</div>
+          </div>
+          <div class="phase-row">
+            <div class="phase-dot" style="background:var(--blue)"></div>
+            <div class="phase-name">Second pour</div>
+            <div class="phase-time">0:55 → 1:10</div>
+            <div class="phase-temp">92°C</div>
+          </div>
+          <div class="phase-row">
+            <div class="phase-dot" style="background:var(--gold)"></div>
+            <div class="phase-name">Third pour</div>
+            <div class="phase-time">2:10</div>
+            <div class="phase-temp">92°C</div>
+          </div>
+          <div class="phase-row">
+            <div class="phase-dot" style="background:var(--ember)"></div>
+            <div class="phase-name">Final drawdown</div>
+            <div class="phase-time">Finish</div>
+            <div class="phase-temp">70°C</div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Footer -->
-    <div class="footer">
-      <div class="footer-line">
-        <div class="footer-text">Resep oleh</div>
+    <!-- Calculator card — full width -->
+    <div class="bcard bcard-full calc-card-bento reveal" id="calculator">
+      <div class="bcard-body">
+        <div class="bcard-tag">Interactive ratio calculator</div>
+        <div class="bcard-title">Set your dose. <span class="g">Everything scales.</span></div>
+        <div class="calc-inner-bento">
+          <div class="calc-readout">
+            <span id="gramDisplay">15</span><span class="unit">g</span>
+          </div>
+          <div class="calc-slider-wrap">
+            <div class="calc-slider-label">Coffee dose</div>
+            <input type="range" id="gramSlider" min="10" max="25" value="15" step="1" aria-label="Coffee dose in grams">
+            <div class="preset-row">
+              <button class="preset-btn" data-dose="12">12g</button>
+              <button class="preset-btn active" data-dose="15">15g</button>
+              <button class="preset-btn" data-dose="18">18g</button>
+              <button class="preset-btn" data-dose="20">20g</button>
+              <button class="preset-btn" data-dose="25">25g</button>
+            </div>
+          </div>
+        </div>
+        <div class="vol-out">
+          <div class="vol-cell">
+            <div class="vol-cell-label">Bloom ×3</div>
+            <div class="vol-cell-val" id="v1">45</div>
+            <div class="vol-cell-sub">ml · 97°C</div>
+          </div>
+          <div class="vol-cell">
+            <div class="vol-cell-label">Pour 2 ×7</div>
+            <div class="vol-cell-val" id="v2">105</div>
+            <div class="vol-cell-sub">ml · 92°C</div>
+          </div>
+          <div class="vol-cell">
+            <div class="vol-cell-label">Pour 3 ×11</div>
+            <div class="vol-cell-val" id="v3">165</div>
+            <div class="vol-cell-sub">ml · 92°C</div>
+          </div>
+          <div class="vol-cell">
+            <div class="vol-cell-label">Finish ×15</div>
+            <div class="vol-cell-val" id="v4">225</div>
+            <div class="vol-cell-sub">ml · 70°C</div>
+          </div>
+        </div>
       </div>
-      <div class="sig">Bahrell</div>
-      <div class="sig-sub">Terroir.idn · Conical Barista</div>
     </div>
 
   </div>
+</section>
 
-  <!-- Right Column: Decorative Hero Image -->
-  <div class="hero-art"></div>
+<!-- ════════ VIDEO TEXT MASK — Macro Coffee Scroll Scene ════════ -->
+<section class="video-section" id="video">
+  <div class="video-pin">
+    <div class="video-orb-layer" id="videoOrbLayer" aria-hidden="true">
+      <div class="video-orb video-orb-a">
+        <video class="macro-video" src="assets/macro_video.mp4" autoplay muted loop playsinline preload="auto"></video>
+      </div>
+      <div class="video-orb video-orb-b">
+        <video class="macro-video" src="assets/macro_video.mp4" autoplay muted loop playsinline preload="auto"></video>
+      </div>
+      <div class="video-orb video-orb-c">
+        <video class="macro-video" src="assets/macro_video.mp4" autoplay muted loop playsinline preload="auto"></video>
+      </div>
+    </div>
 
-</div>
+    <div class="video-mask-layer" id="videoMaskLayer" aria-hidden="true">
+      <svg class="video-mask-svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <mask id="macroTextMask">
+            <rect width="1600" height="900" fill="black"/>
+            <text x="800" y="450"
+              fill="white"
+              text-anchor="middle"
+              dominant-baseline="middle"
+              font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif"
+              font-size="136"
+              font-weight="800"
+              letter-spacing="-8">CT62. Transit. Dual Steep.</text>
+          </mask>
+        </defs>
+        <foreignObject width="1600" height="900" mask="url(#macroTextMask)">
+          <video xmlns="http://www.w3.org/1999/xhtml" class="mask-video" src="assets/macro_video.mp4" autoplay muted loop playsinline preload="auto"></video>
+        </foreignObject>
+      </svg>
+    </div>
 
+    <div class="video-gradient-layer" id="videoGradientLayer">
+      <div class="video-gradient-kicker">Extraction clarity</div>
+      <h2 class="video-gradient-title">Precision pour.<br>Dual steep clarity.</h2>
+      <p class="video-gradient-copy">The macro bloom becomes the recipe language: <strong>controlled water, structured contact time, and a cleaner finish.</strong></p>
+    </div>
+
+    <div class="video-scroll-label">Scroll controlled video mask</div>
+  </div>
+</section>
+
+<!-- ════════ BREWING SCROLL ANIMATION ════════ -->
+<section class="brew-section" id="brew" aria-label="Brewing animation">
+  <div class="brew-canvas" id="brewCanvas">
+
+    <!-- LEFT: phase text -->
+    <div class="brew-left">
+
+      <div class="brew-phase active" id="bp0">
+        <div class="phase-eyebrow">Step 01 · Prep</div>
+        <h2 class="phase-h">Set the stage.</h2>
+        <p class="phase-p">Position the CT62, add your filter paper, and heat the Stagg EKG to temperature. Scroll to begin.</p>
+        <div class="phase-pills">
+          <span class="ppill">CT62 Dripper</span>
+          <span class="ppill">Fellow Stagg EKG</span>
+        </div>
+      </div>
+
+      <div class="brew-phase" id="bp1">
+        <div class="phase-eyebrow">Step 02 · Bloom</div>
+        <h2 class="phase-h">Open the coffee.</h2>
+        <p class="phase-p">Pour <strong id="ph1vol">45ml</strong> at <strong>97°C</strong>. Stir 10 times. Seal the dripper. CO₂ gases escape — flavour unlocks.</p>
+        <div class="phase-pills">
+          <span class="ppill hi">97°C</span>
+          <span class="ppill">0:00 → 0:55</span>
+          <span class="ppill">Stir 10×</span>
+        </div>
+      </div>
+
+      <div class="brew-phase" id="bp2">
+        <div class="phase-eyebrow">Step 03 · Steep</div>
+        <h2 class="phase-h">Build the body.</h2>
+        <p class="phase-p">Unseal. Pour <strong>92°C</strong> to <strong id="ph2vol">105ml</strong> cumulative. Stir 5 times. Re-seal at 1:10 for the second steep.</p>
+        <div class="phase-pills">
+          <span class="ppill hi">92°C</span>
+          <span class="ppill">0:55 → 2:10</span>
+          <span class="ppill">Stir 5×</span>
+        </div>
+      </div>
+
+      <div class="brew-phase" id="bp3">
+        <div class="phase-eyebrow">Step 04 · Finish</div>
+        <h2 class="phase-h">Cool the close.</h2>
+        <p class="phase-p">Pour <strong>70°C</strong> water to <strong id="ph4vol">225ml</strong> total. Low temperature preserves clarity and removes harshness.</p>
+        <div class="phase-pills">
+          <span class="ppill hi">70°C</span>
+          <span class="ppill">Drawdown</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CENTER: scene -->
+    <div class="brew-center">
+      <div class="brew-scene" id="brewScene">
+
+        <!-- Water SVG -->
+        <svg class="brew-water" viewBox="0 0 540 560" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="wg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="rgba(150,210,230,0.7)"/>
+              <stop offset="100%" stop-color="rgba(150,210,230,0.05)"/>
+            </linearGradient>
+          </defs>
+          <path id="ws1"
+            d="M 196 145 C 220 168, 248 195, 276 236 C 294 262, 300 286, 300 310"
+            fill="none" stroke="url(#wg)" stroke-width="3.5" stroke-linecap="round"
+            stroke-dasharray="260" stroke-dashoffset="260" opacity="0"/>
+          <path id="ws2"
+            d="M 202 149 C 226 174, 253 201, 280 241 C 298 267, 305 290, 305 313"
+            fill="none" stroke="rgba(150,210,230,0.18)" stroke-width="1.5" stroke-linecap="round"
+            stroke-dasharray="248" stroke-dashoffset="248" opacity="0"/>
+          <circle id="d1" cx="300" cy="312" r="3.5" fill="rgba(150,210,230,0.5)" opacity="0"/>
+          <circle id="d2" cx="305" cy="323" r="2.2" fill="rgba(150,210,230,0.3)" opacity="0"/>
+        </svg>
+
+        <!-- Kettle SVG — Fellow Stagg EKG line art -->
+        <svg class="brew-kettle" id="kettleSvg" viewBox="0 0 260 210" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Body -->
+          <path d="M 68 172 L 62 122 Q 57 80 74 57 Q 86 42 126 38 Q 166 42 180 57 Q 196 80 191 122 L 186 172 Z"
+            fill="#111" stroke="#444" stroke-width="1.2" stroke-linejoin="round"/>
+          <!-- Scan lines -->
+          <line x1="69" y1="150" x2="185" y2="150" stroke="#222" stroke-width="0.4" stroke-dasharray="3 5"/>
+          <line x1="67" y1="128" x2="186" y2="128" stroke="#222" stroke-width="0.4" stroke-dasharray="3 5"/>
+          <line x1="65" y1="107" x2="188" y2="107" stroke="#222" stroke-width="0.4" stroke-dasharray="3 5"/>
+          <line x1="66" y1="87" x2="186" y2="87" stroke="#222" stroke-width="0.35" stroke-dasharray="3 5"/>
+          <line x1="70" y1="68" x2="183" y2="68" stroke="#222" stroke-width="0.3" stroke-dasharray="3 5"/>
+          <!-- Center seam -->
+          <line x1="126" y1="38" x2="126" y2="172" stroke="#1a1a1a" stroke-width="0.3" stroke-dasharray="4 6"/>
+          <!-- Lid -->
+          <ellipse cx="126" cy="40" rx="50" ry="9" fill="none" stroke="#555" stroke-width="1"/>
+          <ellipse cx="126" cy="37" rx="42" ry="6.5" fill="none" stroke="#3a3a3a" stroke-width="0.5"/>
+          <rect x="120" y="24" width="12" height="11" rx="4" fill="none" stroke="#444" stroke-width="0.8"/>
+          <!-- Gooseneck spout -->
+          <path d="M 64 132 Q 40 124, 25 100 Q 12 76 15 52 Q 17 33, 12 20"
+            fill="none" stroke="#555" stroke-width="2" stroke-linecap="round"/>
+          <path d="M 62 127 Q 42 121, 30 99 Q 18 78 20 55 Q 22 37 17 25"
+            fill="none" stroke="#2a2a2a" stroke-width="0.6" stroke-linecap="round"/>
+          <ellipse cx="12" cy="19" rx="4" ry="3" fill="none" stroke="#444" stroke-width="0.8" transform="rotate(-20 12 19)"/>
+          <!-- Handle -->
+          <path d="M 184 62 L 228 62 Q 238 62, 238 72 L 238 148 Q 238 158, 230 158 L 216 158"
+            fill="none" stroke="#555" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M 183 67 L 226 67 L 226 152 L 216 153"
+            fill="none" stroke="#222" stroke-width="0.5" stroke-linecap="round"/>
+          <line x1="232" y1="88" x2="232" y2="138" stroke="#222" stroke-width="0.4" stroke-dasharray="2 4"/>
+          <!-- Base -->
+          <rect x="58" y="171" width="142" height="13" rx="3" fill="none" stroke="#3a3a3a" stroke-width="0.8"/>
+          <circle cx="95" cy="177" r="5" fill="none" stroke="#2e2e2e" stroke-width="0.6"/>
+          <circle cx="160" cy="177" r="5" fill="none" stroke="#2e2e2e" stroke-width="0.6"/>
+          <!-- Display -->
+          <rect x="115" y="183" width="26" height="10" rx="2.5" fill="none" stroke="#3a3a3a" stroke-width="0.5"/>
+          <line x1="118" y1="187" x2="138" y2="187" stroke="#2a2a2a" stroke-width="0.3"/>
+        </svg>
+
+        <!-- CT62 line art — recipe-card front view inspired by the reference guide -->
+        <svg id="ct62Wire" class="brew-dripper-photo" viewBox="0 0 360 420" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter:none;">
+          <defs>
+            <filter id="lineGlow">
+              <feGaussianBlur stdDeviation="0.9" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <g stroke="#C4A46B" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Subtle horizontal pour guide lines like the recipe illustration -->
+            <g opacity="0.28" stroke-width="0.65">
+              <path d="M18 120H98"/>
+              <path d="M18 176H112"/>
+              <path d="M18 242H126"/>
+              <path d="M18 312H136"/>
+              <path d="M250 120H344"/>
+              <path d="M238 176H344"/>
+              <path d="M226 242H344"/>
+              <path d="M222 312H344"/>
+            </g>
+
+            <!-- Upper transparent CT62 cone -->
+            <path d="M47 88C62 160 89 213 124 246H236C271 213 298 160 313 88" stroke-width="1.55" opacity="0.96" filter="url(#lineGlow)"/>
+            <ellipse cx="180" cy="88" rx="133" ry="24" stroke-width="1.55" opacity="0.98" filter="url(#lineGlow)"/>
+            <ellipse cx="180" cy="88" rx="121" ry="18" stroke-width="0.85" opacity="0.62"/>
+            <path d="M58 92C91 112 268 112 302 92" stroke-width="0.8" opacity="0.4"/>
+
+            <!-- Top internal ribs -->
+            <g opacity="0.72" stroke-width="0.75">
+              <path d="M78 92L102 180"/>
+              <path d="M111 80L126 210"/>
+              <path d="M148 72L158 226"/>
+              <path d="M180 70V232"/>
+              <path d="M212 72L202 226"/>
+              <path d="M249 80L234 210"/>
+              <path d="M282 92L258 180"/>
+            </g>
+
+            <!-- CT62 instinct geometric surface pattern -->
+            <g opacity="0.82" stroke-width="1.05">
+              <path d="M111 128C126 140 130 154 124 169C114 165 104 153 103 139"/>
+              <path d="M249 128C234 140 230 154 236 169C246 165 256 153 257 139"/>
+              <path d="M138 124C151 136 154 149 150 161"/>
+              <path d="M222 124C209 136 206 149 210 161"/>
+              <path d="M163 126C171 137 172 148 166 158"/>
+              <path d="M197 126C189 137 188 148 194 158"/>
+              <path d="M145 166C157 156 171 156 180 169C189 156 203 156 215 166"/>
+              <ellipse cx="144" cy="184" rx="13" ry="9"/>
+              <ellipse cx="180" cy="184" rx="14" ry="10"/>
+              <ellipse cx="216" cy="184" rx="13" ry="9"/>
+              <path d="M107 190C124 195 135 206 137 222"/>
+              <path d="M253 190C236 195 225 206 223 222"/>
+              <path d="M141 216C154 205 170 207 180 222C190 207 206 205 219 216"/>
+              <path d="M123 229C139 239 158 243 180 243C202 243 221 239 237 229" opacity="0.62"/>
+            </g>
+
+            <!-- Divider ring between patterned upper cone and ribbed lower cone -->
+            <path d="M111 238C137 248 223 248 249 238" stroke-width="1.45" opacity="0.92"/>
+            <path d="M116 247C143 255 217 255 244 247" stroke-width="0.95" opacity="0.72"/>
+
+            <!-- Lower ribbed transition cone -->
+            <path d="M116 247L144 315H216L244 247" stroke-width="1.35" opacity="0.96"/>
+            <g opacity="0.86" stroke-width="0.78">
+              <path d="M121 249L146 315"/><path d="M130 250L150 315"/><path d="M139 251L154 315"/><path d="M148 252L158 315"/>
+              <path d="M157 253L162 315"/><path d="M166 253L168 315"/><path d="M175 254L177 315"/><path d="M184 254L183 315"/>
+              <path d="M193 253L189 315"/><path d="M202 252L197 315"/><path d="M211 251L205 315"/><path d="M220 250L210 315"/><path d="M239 249L214 315"/>
+            </g>
+
+            <!-- Outlet collar -->
+            <path d="M141 315H219V329H141Z" stroke-width="1.35" opacity="0.9"/>
+            <path d="M151 329H209" stroke-width="0.85" opacity="0.58"/>
+
+            <!-- Transit ring with fine ribs -->
+            <ellipse cx="180" cy="340" rx="86" ry="18" stroke-width="1.35" opacity="0.95"/>
+            <ellipse cx="180" cy="340" rx="76" ry="13" stroke-width="0.8" opacity="0.58"/>
+            <g opacity="0.72" stroke-width="0.65">
+              <path d="M96 337L96 348"/><path d="M107 332L107 351"/><path d="M118 329L118 353"/><path d="M129 327L129 354"/>
+              <path d="M140 325L140 355"/><path d="M151 324L151 356"/><path d="M162 323L162 356"/><path d="M173 322L173 357"/>
+              <path d="M184 322L184 357"/><path d="M195 323L195 356"/><path d="M206 324L206 356"/><path d="M217 325L217 355"/>
+              <path d="M228 327L228 354"/><path d="M239 329L239 353"/><path d="M250 332L250 351"/><path d="M261 337L261 348"/>
+            </g>
+
+            <!-- Flow-control switch -->
+            <path d="M155 338H205V369H155Z" stroke-width="1.25" opacity="0.9"/>
+            <path d="M166 344H194V363H166Z" stroke="#A9D6B3" stroke-width="1.8" opacity="0.98"/>
+            <path d="M174 344V352H186V344" stroke="#A9D6B3" stroke-width="1.6" opacity="0.98"/>
+
+            <!-- Industrial base and feet -->
+            <path d="M87 357C106 354 125 349 141 340H219C235 349 254 354 273 357L320 381V403H230C219 403 211 397 205 390H155C149 397 141 403 130 403H40V381L87 357Z" stroke-width="1.45" opacity="0.98" filter="url(#lineGlow)"/>
+            <path d="M85 381H132C143 381 151 374 158 368H202C209 374 217 381 228 381H275" stroke-width="0.9" opacity="0.58"/>
+            <path d="M127 405C145 411 215 411 233 405" stroke-width="0.75" opacity="0.45"/>
+          </g>
+        </svg>
+
+        <!-- Steam particles (SVG) -->
+        <svg style="position:absolute;top:60px;left:50%;transform:translateX(-50%);width:100px;height:80px;z-index:5;pointer-events:none;overflow:visible;" viewBox="0 0 100 80">
+          <g id="steam" opacity="0">
+            <circle cx="35" cy="60" r="3" fill="rgba(196,164,107,0.18)">
+              <animate attributeName="cy" values="60;30" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.35;0" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="r" values="3;8" dur="3s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="55" cy="55" r="2.5" fill="rgba(196,164,107,0.12)">
+              <animate attributeName="cy" values="55;22" dur="3.5s" begin="0.9s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.28;0" dur="3.5s" begin="0.9s" repeatCount="indefinite"/>
+              <animate attributeName="r" values="2.5;7" dur="3.5s" begin="0.9s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="70" cy="58" r="2" fill="rgba(196,164,107,0.09)">
+              <animate attributeName="cy" values="58;28" dur="3.2s" begin="1.6s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.22;0" dur="3.2s" begin="1.6s" repeatCount="indefinite"/>
+              <animate attributeName="r" values="2;6" dur="3.2s" begin="1.6s" repeatCount="indefinite"/>
+            </circle>
+          </g>
+        </svg>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: live metrics -->
+    <div class="brew-right">
+      <div class="brew-metric" id="bmTemp">
+        <div class="bm-label">Temperature</div>
+        <div class="bm-val"><span id="bmTempVal">—</span><em>°C</em></div>
+      </div>
+      <div class="brew-metric" id="bmVol">
+        <div class="bm-label">Volume</div>
+        <div class="bm-val"><span id="bmVolVal">0</span><em>ml</em></div>
+      </div>
+      <div class="brew-metric" id="bmPhase">
+        <div class="bm-label">Phase</div>
+        <div class="bm-val" id="bmPhaseVal" style="font-size:1.1rem;letter-spacing:0.01em;">Prep</div>
+      </div>
+      <div class="brew-dots" aria-label="Progress">
+        <div class="bdot on" id="dot0"></div>
+        <div class="bdot" id="dot1"></div>
+        <div class="bdot" id="dot2"></div>
+        <div class="bdot" id="dot3"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════ STEPS TIMELINE ════════ -->
+<section class="steps-section" id="steps">
+  <div class="steps-inner">
+    <div class="steps-hd">
+      <span class="steps-hd-eyebrow reveal">Method</span>
+      <h2 class="steps-hd-title reveal d1">Four phases.<br>One perfect cup.</h2>
+    </div>
+    <div class="steps-list">
+
+      <div class="step-row" data-s="1">
+        <div class="step-num-col">
+          <div class="step-num-circle">1</div>
+          <div class="step-meta">Bloom</div>
+        </div>
+        <div class="step-body-col">
+          <div class="step-timing">0:00 → 0:55</div>
+          <div class="step-name">Initial bloom</div>
+          <div class="step-desc">Pour <span class="hi" id="s1vol">45ml</span> at <strong>97°C</strong>. Stir 10 times evenly. Seal the dripper. This extracts volatile aromatics and flavour compounds from the first steep.</div>
+          <span class="step-chip">Steep 1 — Flavour extraction</span>
+        </div>
+      </div>
+
+      <div class="step-row" data-s="2">
+        <div class="step-num-col">
+          <div class="step-num-circle">2</div>
+          <div class="step-meta">Pour</div>
+        </div>
+        <div class="step-body-col">
+          <div class="step-timing">0:55 → 1:10</div>
+          <div class="step-name">Second pour</div>
+          <div class="step-desc">Unseal. Pour <strong>92°C</strong> water to a cumulative <span class="hi" id="s2vol">105ml</span>. Stir 5 times. Re-seal at 1:10 to begin second steep.</div>
+        </div>
+      </div>
+
+      <div class="step-row" data-s="3">
+        <div class="step-num-col">
+          <div class="step-num-circle">3</div>
+          <div class="step-meta">Steep</div>
+        </div>
+        <div class="step-body-col">
+          <div class="step-timing">2:10</div>
+          <div class="step-name">Third pour</div>
+          <div class="step-desc">Pour <strong>92°C</strong> to a cumulative total of <span class="hi" id="s3vol">165ml</span>. This phase builds body, balance, and texture — the backbone of the cup.</div>
+          <span class="step-chip">Steep 2 — Balance & texture</span>
+        </div>
+      </div>
+
+      <div class="step-row" data-s="4">
+        <div class="step-num-col">
+          <div class="step-num-circle">4</div>
+          <div class="step-meta">Finish</div>
+        </div>
+        <div class="step-body-col">
+          <div class="step-timing">Drawdown</div>
+          <div class="step-name">Final drawdown</div>
+          <div class="step-desc">Pour <strong>70°C</strong> water to a final total of <span class="hi" id="s4vol">225ml</span>. The low temperature preserves clarity and eliminates harshness. Let drawdown complete undisturbed.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════ PARAMETERS ════════ -->
+<section class="params-section" id="params">
+  <div class="params-inner">
+    <div class="bento-label reveal">Parameters</div>
+    <h2 class="params-title reveal d1">Temperature &amp; grind.</h2>
+    <p class="params-sub reveal d2">Dial in each variable for your specific setup.</p>
+
+    <div class="params-grid reveal">
+      <div class="pcard" data-c="1">
+        <div class="pcard-label">Bloom</div>
+        <div class="pcard-val">97<em>°C</em></div>
+        <div class="pcard-sub">Stir 10×</div>
+      </div>
+      <div class="pcard" data-c="2">
+        <div class="pcard-label">Pour 2</div>
+        <div class="pcard-val">92<em>°C</em></div>
+        <div class="pcard-sub">Stir 5×</div>
+      </div>
+      <div class="pcard" data-c="3">
+        <div class="pcard-label">Pour 3</div>
+        <div class="pcard-val">92<em>°C</em></div>
+        <div class="pcard-sub">Steep 2</div>
+      </div>
+      <div class="pcard" data-c="4">
+        <div class="pcard-label">Finish</div>
+        <div class="pcard-val">70<em>°C</em></div>
+        <div class="pcard-sub">Drawdown</div>
+      </div>
+    </div>
+
+    <div class="grind-box reveal d1">
+      <div class="grind-toggle">
+        <button class="grind-tab active" data-g="fine">Fine grind</button>
+        <button class="grind-tab" data-g="coarse">Coarse · Hi-flux</button>
+      </div>
+      <div class="grind-panel active" data-p="fine">
+        <div class="grind-h">Fine <span class="g">grind</span></div>
+        <p class="grind-p">Bloom moves faster. Pour intervals: <strong>20 – 25 – 25 – 25 sec</strong>. Keep timing tight to avoid over-extraction. Watch the bloom closely.</p>
+      </div>
+      <div class="grind-panel" data-p="coarse">
+        <div class="grind-h">Coarse <span class="g">· Sibarist paper</span></div>
+        <p class="grind-p">Flow is faster. Extend bloom: <strong>45 – 45 – 30 – 30 – 30 sec</strong>. Longer time is acceptable and can even add body.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ FOOTER ════════ -->
+<footer class="footer">
+  <div class="footer-title">Bahrell.</div>
+  <div class="footer-sub">Terroir.idn · Conical Barista</div>
+  <div class="footer-rule"></div>
+  <div class="footer-copy">CT62 Recipe · Dual Steep Method · V60</div>
+</footer>
+
+<!-- ════════ SCRIPTS ════════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
-  const slider = document.getElementById('gram-slider');
-  function update() {
-    const g = parseInt(slider.value);
-    document.getElementById('gram-display').textContent = g;
-    document.getElementById('v1').textContent = g * 3;
-    document.getElementById('v2').textContent = g * 7;
-    document.getElementById('v3').textContent = g * 11;
-    document.getElementById('v4').textContent = g * 15;
-    document.getElementById('bloom-ml').textContent = (g * 3) + 'ml';
-    document.getElementById('p2-ml').textContent = (g * 7) + 'ml';
-    document.getElementById('p3-ml').textContent = (g * 11) + 'ml';
-    document.getElementById('p4-ml').textContent = (g * 15) + 'ml';
+(function () {
+  'use strict';
+
+  /* ── Helpers ── */
+  const $ = s => document.querySelector(s);
+  const $$ = s => [...document.querySelectorAll(s)];
+  const setText = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+
+  /* ── Recipe calc ── */
+  let dose = 15;
+  function rv(g) { return { v1: g*3, v2: g*7, v3: g*11, v4: g*15 }; }
+  function updateRecipe() {
+    const g = dose, { v1,v2,v3,v4 } = rv(g);
+    setText('gramDisplay', g);
+    setText('v1', v1); setText('v2', v2); setText('v3', v3); setText('v4', v4);
+    setText('s1vol', v1+'ml'); setText('s2vol', v2+'ml'); setText('s3vol', v3+'ml'); setText('s4vol', v4+'ml');
+    setText('ph1vol', v1+'ml'); setText('ph2vol', v2+'ml'); setText('ph4vol', v4+'ml');
+    // bump
+    const el = document.getElementById('gramDisplay');
+    el.style.transform = 'scale(1.06)';
+    setTimeout(() => el.style.transform = '', 180);
+    $$('.preset-btn').forEach(b => b.classList.toggle('active', +b.dataset.dose === g));
   }
-  slider.addEventListener('input', update);
-  update();
+  const slider = document.getElementById('gramSlider');
+  slider.addEventListener('input', () => { dose = +slider.value; updateRecipe(); });
+  $$('.preset-btn').forEach(b => b.addEventListener('click', () => { dose = +b.dataset.dose; slider.value = dose; updateRecipe(); }));
+  updateRecipe();
+
+  /* ── Grind toggle ── */
+  $$('.grind-tab').forEach(t => t.addEventListener('click', () => {
+    const g = t.dataset.g;
+    $$('.grind-tab').forEach(x => x.classList.remove('active'));
+    $$('.grind-panel').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    $(`[data-p="${g}"]`).classList.add('active');
+  }));
+
+  /* ── IntersectionObserver reveal ── */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vis'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  $$('.reveal, .step-row').forEach(el => io.observe(el));
+
+  /* ── GSAP brewing animation ── */
+  if (window.gsap && window.ScrollTrigger) {
+    gsap.registerPlugin(ScrollTrigger);
+
+    $$('.macro-video, .mask-video').forEach(video => {
+      video.play().catch(() => {});
+    });
+
+    /* ── Pinned macro video text mask ── */
+    gsap.set('#videoMaskLayer', { opacity: 0, scale: 1.08 });
+    gsap.set('#videoGradientLayer', { opacity: 0, y: 26, scale: 0.98 });
+
+    const videoTextTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '#video',
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 1.2
+      }
+    });
+
+    videoTextTl
+      .to('.video-orb-a', { x: '-18vw', y: '-8vh', scale: 1.26, duration: 0.18, ease: 'none' }, 0)
+      .to('.video-orb-b', { x: '10vw', y: '-4vh', scale: 1.14, duration: 0.18, ease: 'none' }, 0)
+      .to('.video-orb-c', { y: '18vh', scale: 0.86, opacity: 0, duration: 0.18, ease: 'none' }, 0)
+      .to('#videoOrbLayer', { opacity: 0.18, scale: 0.94, duration: 0.28, ease: 'power1.out' }, 0.12)
+      .to('#videoMaskLayer', { opacity: 1, scale: 1, duration: 0.3, ease: 'power2.out' }, 0.14)
+      .to('#videoMaskLayer', { scale: 0.92, duration: 0.25, ease: 'none' }, 0.46)
+      .to('#videoMaskLayer', { opacity: 0.18, duration: 0.16, ease: 'none' }, 0.64)
+      .to('#videoGradientLayer', { opacity: 1, y: 0, scale: 1, duration: 0.24, ease: 'power2.out' }, 0.66)
+      .to('#videoOrbLayer', { opacity: 0, duration: 0.18, ease: 'none' }, 0.72)
+      .to('#videoMaskLayer', { opacity: 0, duration: 0.14, ease: 'none' }, 0.78);
+
+    let activePhase = 0;
+    const phaseNames = ['Prep','Bloom','Steep','Finish'];
+    const phaseTemps = ['—','97','92','70'];
+
+    function setPhase(idx) {
+      if (idx === activePhase) return;
+      activePhase = idx;
+      $$('.brew-phase').forEach((el,i) => el.classList.toggle('active', i === idx));
+      [0,1,2,3].forEach(i => document.getElementById('dot'+i).classList.toggle('on', i <= idx));
+      setText('bmPhaseVal', phaseNames[idx]);
+      document.getElementById('bmTempVal').textContent = phaseTemps[idx];
+      ['bmTemp','bmVol','bmPhase'].forEach(id => document.getElementById(id).classList.toggle('on', idx > 0));
+    }
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '#brew',
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 1.8,
+        onUpdate(self) {
+          const p = self.progress;
+          // live volume
+          const g = dose;
+          let vol = 0;
+          if (p >= 0.15 && p < 0.45) vol = Math.round(g*3*((p-0.15)/0.30));
+          else if (p >= 0.45 && p < 0.75) vol = Math.round(g*3 + g*8*((p-0.45)/0.30));
+          else if (p >= 0.75) vol = Math.round(g*11 + g*4*((p-0.75)/0.25));
+          setText('bmVolVal', vol);
+          const phase = p < 0.15 ? 0 : p < 0.45 ? 1 : p < 0.75 ? 2 : 3;
+          setPhase(phase);
+        }
+      }
+    });
+
+    // kettle enters
+    tl.fromTo('#kettleSvg', { x: '-8%', y: 0, rotation: -3 }, { x: '16%', y: -8, rotation: 0, duration: 0.14, ease: 'power2.out' });
+    // bloom pour: Stagg spout is on the left, so the kettle tilts counter-clockwise.
+    tl.to('#kettleSvg', { rotation: -36, x: '72%', y: -18, duration: 0.28, ease: 'power1.inOut' });
+    tl.to(['#ws1','#ws2'], { strokeDashoffset: 0, opacity: 1, duration: 0.24 }, '<+=0.04');
+    tl.to(['#d1','#d2'], { opacity: 0.8, duration: 0.04 }, '<+=0.1');
+    tl.to('#steam', { opacity: 1, duration: 0.08 }, '<+=0.1');
+    // deeper pour
+    tl.to('#kettleSvg', { rotation: -44, x: '76%', y: -22, duration: 0.26, ease: 'power1.inOut' });
+    // drawdown
+    tl.to('#kettleSvg', { rotation: -4, x: '6%', y: 0, duration: 0.22, ease: 'power2.inOut' });
+    tl.to(['#ws1','#ws2','#d1','#d2'], { opacity: 0, duration: 0.08 }, '<');
+  }
+
+})();
 </script>
+</body>
+</html>
